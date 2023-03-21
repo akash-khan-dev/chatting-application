@@ -1,0 +1,63 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ol,
+ul {
+  list-style-type: none;
+}
+a {
+  text-decoration: none;
+}
+body {
+  background-color: #f9f9f9;
+}
+:root {
+  --title-color: #11175d;
+  --white-color: #fff;
+  --black: #000;
+  --primary-color: #5f35f5;
+  --error-color: #d9534f;
+  --nunito: "Nunito", sans-serif;
+  --open-sans: "Open Sans", sans-serif;
+  --poppins: "Poppins", sans-serif;
+}
+.box {
+  align-items: center !important;
+  height: 100vh;
+}
+.inputs-design {
+  width: 70% !important;
+  margin-top: 25px !important;
+}
+.MuiFormLabel-root.Mui-focused {
+  color: var(--primary-color) !important;
+}
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-color) !important;
+}
+
+.button {
+  width: 70% !important;
+  margin-top: 35px !important;
+  border-radius: 80px !important;
+  padding: 15px 0px !important;
+  background-color: var(--primary-color) !important;
+}
+.links p {
+  width: 70%;
+  text-align: center;
+}
+.links span a {
+  color: #ea6c00;
+}
+.singup-img img {
+  width: 100%;
+}
+.errors {
+  font-size: 14px;
+  font-family: var(--poppins);
+  font-weight: 500;
+  color: var(--error-color);
+  margin-top: 10px;
+}

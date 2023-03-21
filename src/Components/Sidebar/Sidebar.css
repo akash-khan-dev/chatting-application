@@ -1,0 +1,104 @@
+.sidebar-box {
+  background-color: var(--primary-color);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0px;
+  box-sizing: border-box;
+}
+.sidebar-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+.sidebar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.508);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all linear 0.3s;
+  cursor: pointer;
+}
+.sidebar-overlay svg {
+  fill: #fff !important;
+  width: 25px;
+  height: 25px;
+}
+.sidebar-img:hover .sidebar-overlay {
+  opacity: 1;
+}
+.sidebar-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.icon {
+  position: relative;
+  z-index: 1;
+}
+.icon::after {
+  position: absolute;
+  content: "";
+  width: 100px;
+  height: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -70%;
+  background-color: #fff;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  z-index: -1;
+  opacity: 0;
+}
+.icon::before {
+  position: absolute;
+  content: "";
+  width: 8px;
+  height: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -164%;
+  background-color: #5f35f5;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  opacity: 0;
+}
+.icon svg {
+  font-size: 30px;
+  margin: 20px 0px;
+  cursor: pointer;
+}
+.icon svg path {
+  fill: #fff;
+}
+.sidebar-logout svg {
+  font-size: 30px;
+  cursor: pointer;
+}
+.sidebar-logout svg path {
+  fill: #fff;
+}
+.user-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+.user-name h4 {
+  color: #fff;
+  font-family: var(--nunito);
+  font-weight: 400;
+  font-size: 16px;
+}

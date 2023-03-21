@@ -1,0 +1,63 @@
+.my-group {
+  width: 100%;
+  height: 300px;
+  background-color: var(--white-color);
+  margin-top: 25px;
+  padding: 13px 0px 13px 20px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.my-group-container {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  height: 93%;
+  padding-right: 20px;
+}
+.my-group-header h5 {
+  font-family: var(--poppins);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--black);
+}
+.my-group-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+.my-group-wrapper:last-child {
+  border-bottom: none;
+}
+.my-group-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.my-group-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.my-group-name {
+  width: 170px;
+  margin-top: 10px;
+}
+.my-group-name h5 {
+  font-family: var(--poppins);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--black);
+}
+.my-group-date {
+  width: 140px;
+  padding-top: 13px;
+}
+.my-group-date p {
+  font-family: var(--poppins);
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.5);
+}

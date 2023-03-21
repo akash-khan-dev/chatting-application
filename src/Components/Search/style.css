@@ -1,0 +1,30 @@
+.search {
+  width: 100%;
+  background-color: var(--white-color);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+}
+.search-icon {
+  width: 8%;
+  height: 18px;
+}
+.search-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.search-input {
+  width: 92%;
+}
+.search-input input {
+  width: 100%;
+  outline: none;
+  border: none;
+  font-family: var(--poppins);
+  font-size: 16px;
+  font-weight: 400;
+}

@@ -1,0 +1,77 @@
+.log-head {
+  color: var(--title-color);
+  font-size: 25px;
+  font-family: var(--nunito);
+  text-transform: capitalize;
+  font-weight: 700;
+  text-align: center;
+}
+.forms {
+  text-align: center;
+}
+.buttons {
+  width: 70% !important;
+  margin-top: 35px !important;
+
+  padding: 15px 0px !important;
+  background-color: var(--primary-color) !important;
+}
+
+.links-sign p {
+  width: 70%;
+  text-align: center;
+  margin: auto;
+  margin-top: 15px;
+}
+.forgot-password a {
+  display: block;
+  margin-top: 12px;
+}
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+.links-sign p a {
+  color: #ea6c00;
+}
+.avatar {
+  text-align: center;
+}
+.avatar img {
+  width: 100px;
+}
+.log-password {
+  position: relative;
+}
+.log-eyes {
+  position: absolute;
+  top: 50%;
+  right: 20%;
+  cursor: pointer;
+}
+.log-errors {
+  font-size: 14px;
+  font-family: var(--poppins);
+  font-weight: 500;
+  color: var(--error-color);
+  margin-top: 10px;
+  text-align: start;
+  margin-left: 80px;
+}
+
+.authentication {
+  margin-left: 80px;
+  margin-top: 20px;
+  border: 1px solid hsla(242, 97%, 15%, 0.3);
+  border-radius: 9px;
+  padding: 15px 22px;
+  width: 160px;
+  display: flex;
+  cursor: pointer;
+}
+.auth-text {
+  font-family: var(--open-sans);
+  font-weight: 600;
+  font-size: 13.3376px;
+  color: #03014c;
+  margin-left: 10px;
+}

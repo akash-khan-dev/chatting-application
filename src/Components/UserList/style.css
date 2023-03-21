@@ -1,0 +1,73 @@
+.user-list {
+  width: 100%;
+  height: 368px;
+  background-color: var(--white-color);
+  margin-top: 14px;
+  padding: 13px 0px 13px 20px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.user-list-header h3 {
+  font-family: var(--poppins);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--black);
+}
+.user-list-container {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-right: 20px;
+  height: 94%;
+}
+.user-list-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+.user-list-wrapper:last-child {
+  border-bottom: none;
+}
+
+.user-list-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.user-list-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.user-list-name {
+  width: 220px;
+  margin-top: 10px;
+}
+.user-list-name h5 {
+  font-family: var(--poppins);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--black);
+}
+.user-list-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  margin-right: 20px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.user-list-btn svg {
+  width: 20px;
+  height: 20px;
+}
+.user-list-btn svg path {
+  fill: var(--white-color);
+}
