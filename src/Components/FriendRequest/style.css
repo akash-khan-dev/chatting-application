@@ -79,3 +79,6 @@
   border-radius: 5px;
   margin-top: 3px;
 }
+.friend-request-btn .remove:hover {
+  background-color: rgb(170, 69, 69) !important;
+}

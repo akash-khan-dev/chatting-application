@@ -71,3 +71,7 @@
 .user-list-btn svg path {
   fill: var(--white-color);
 }
+button {
+  border: none;
+  outline: none;
+}
