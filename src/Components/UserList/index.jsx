@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
-import { AiOutlinePlus } from "react-icons/ai";
-import { RxCross2 } from "react-icons/rx";
-import { TiTick } from "react-icons/ti";
-import { getDatabase, ref, onValue, push, set } from "firebase/database";
+// import { AiOutlinePlus } from "react-icons/ai";
+// import { RxCross2 } from "react-icons/rx";
+// import { TiTick } from "react-icons/ti";
+import Button from "@mui/material/Button";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  push,
+  set,
+  remove,
+} from "firebase/database";
 import { useSelector } from "react-redux";
 
 const UserList = () => {
@@ -59,6 +67,23 @@ const UserList = () => {
     });
   }, []);
 
+  // cancle request
+  let [cancle, setCancle] = useState([]);
+
+  useEffect(() => {
+    const starCountRef = ref(db, "friendsReuquest");
+    onValue(starCountRef, (snapshot) => {
+      let cancleArr = [];
+      snapshot.forEach((item) => {
+        cancleArr.push({ ...item.val(), id: item.key });
+        setCancle(cancleArr);
+      });
+    });
+  }, []);
+  const handleCancleRequest = (data) => {
+    data.map((data) => remove(ref(db, "friendsReuquest/" + data.id)));
+  };
+
   return (
     <>
       <div className="user-list">
@@ -76,25 +101,32 @@ const UserList = () => {
               </div>
               {frnd.includes(item.id + user.uid) ||
               frnd.includes(user.uid + item.id) ? (
-                <button disabled className="user-list-btn">
-                  <TiTick />
-                </button>
-              ) : friendList.includes(item.id + user.uid) ||
-                friendList.includes(user.uid + item.id) ? (
-                <button
-                  // onClick={() => handleFriendRequest(item)}
-                  disabled
+                <Button
+                  variant="outlined"
+                  size="small"
                   className="user-list-btn"
                 >
-                  <RxCross2 />
-                </button>
+                  friend
+                </Button>
+              ) : friendList.includes(item.id + user.uid) ||
+                friendList.includes(user.uid + item.id) ? (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => handleCancleRequest(cancle)}
+                  className="user-list-btn"
+                >
+                  cancle
+                </Button>
               ) : (
-                <button
+                <Button
+                  variant="outlined"
+                  size="small"
                   onClick={() => handleFriendRequest(item)}
                   className="user-list-btn"
                 >
-                  <AiOutlinePlus />
-                </button>
+                  add
+                </Button>
               )}
             </div>
           ))}

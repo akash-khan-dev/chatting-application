@@ -14,7 +14,16 @@
   scrollbar-width: thin;
   padding-right: 20px;
 }
-
+.group-item-container::-webkit-scrollbar {
+  width: 5px;
+}
+.group-item-container::-webkit-scrollbar-thumb {
+  border-top-right-radius: 5px;
+  background-color: #755feb;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
 .group-header h3 {
   font-family: var(--poppins);
   font-weight: 600;

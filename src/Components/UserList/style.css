@@ -20,6 +20,16 @@
   padding-right: 20px;
   height: 94%;
 }
+.user-list-container::-webkit-scrollbar {
+  width: 5px;
+}
+.user-list-container::-webkit-scrollbar-thumb {
+  border-top-right-radius: 5px;
+  background-color: #755feb;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
 .user-list-wrapper {
   display: flex;
   justify-content: space-between;
@@ -43,7 +53,7 @@
   object-fit: cover;
 }
 .user-list-name {
-  width: 220px;
+  width: 190px;
   margin-top: 10px;
 }
 .user-list-name h5 {
@@ -52,26 +62,16 @@
   font-size: 18px;
   color: var(--black);
 }
+.user-list-wrapper button {
+  width: 80px;
+  background-color: var(--primary-color) !important;
+  font-family: var(--poppins);
+  font-weight: 600;
+  color: var(--white-color);
+  margin-top: 10px;
+}
 .user-list-btn {
-  width: 35px;
-  height: 35px;
-  border-radius: 5px;
-  background-color: var(--primary-color);
-  margin-right: 20px;
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-.user-list-btn svg {
-  width: 20px;
-  height: 20px;
-}
-.user-list-btn svg path {
-  fill: var(--white-color);
-}
-button {
-  border: none;
-  outline: none;
+  background: none !important;
+  border: none !important;
+  height: 32px;
 }

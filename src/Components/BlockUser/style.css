@@ -20,6 +20,16 @@
   height: 93%;
   padding-right: 20px;
 }
+.block-user-container::-webkit-scrollbar {
+  width: 5px;
+}
+.block-user-container::-webkit-scrollbar-thumb {
+  border-top-right-radius: 5px;
+  background-color: #755feb;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
 .block-user-wrapper {
   display: flex;
   justify-content: space-between;
