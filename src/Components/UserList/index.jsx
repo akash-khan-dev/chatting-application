@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
-// import { AiOutlinePlus } from "react-icons/ai";
-// import { RxCross2 } from "react-icons/rx";
-// import { TiTick } from "react-icons/ti";
+
 import Button from "@mui/material/Button";
 import {
   getDatabase,
@@ -19,6 +17,8 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [friendList, setFriendList] = useState([]);
   const [frnd, setFrnd] = useState([]);
+  const [cancle, setCancle] = useState([]);
+
   const user = useSelector((user) => user.logIn.login);
   //  show user
   useEffect(() => {
@@ -30,9 +30,10 @@ const UserList = () => {
           users.push({ ...userList.val(), id: userList.key });
         }
       });
+
       setUsers(users);
     });
-  }, []);
+  }, [db, user.uid]);
 
   // send request
   const handleFriendRequest = (data) => {
@@ -54,7 +55,7 @@ const UserList = () => {
       });
       setFriendList(reqArr);
     });
-  }, []);
+  }, [db]);
 
   useEffect(() => {
     const starCountRef = ref(db, "Friends");
@@ -65,10 +66,9 @@ const UserList = () => {
       });
       setFrnd(frndArr);
     });
-  }, []);
+  }, [db]);
 
   // cancle request
-  let [cancle, setCancle] = useState([]);
 
   useEffect(() => {
     const starCountRef = ref(db, "friendsReuquest");
@@ -76,13 +76,17 @@ const UserList = () => {
       let cancleArr = [];
       snapshot.forEach((item) => {
         cancleArr.push({ ...item.val(), id: item.key });
-        setCancle(cancleArr);
       });
+      setCancle(cancleArr);
     });
-  }, []);
-  const handleCancleRequest = (data) => {
-    data.map((data) => remove(ref(db, "friendsReuquest/" + data.id)));
+  }, [db]);
+
+  const handleRevome = (id) => {
+    remove(ref(db, "friendsReuquest/" + id));
+
+    console.log(id);
   };
+  console.log(cancle);
 
   return (
     <>
@@ -113,7 +117,14 @@ const UserList = () => {
                 <Button
                   variant="outlined"
                   size="small"
-                  onClick={() => handleCancleRequest(cancle)}
+                  onClick={() =>
+                    handleRevome(
+                      cancle.find(
+                        (req) =>
+                          req.reciverid === item.id && req.senderid === user.uid
+                      ).id
+                    )
+                  }
                   className="user-list-btn"
                 >
                   cancle

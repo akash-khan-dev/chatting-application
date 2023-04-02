@@ -73,7 +73,10 @@
   font-family: var(--poppins);
   font-weight: 600;
   color: var(--white-color);
-  padding: 5px 0px;
+  padding: 4px 0px;
   cursor: pointer;
   border-radius: 5px;
+}
+.block-user-btn button:hover {
+  background-color: var(--primary-color);
 }

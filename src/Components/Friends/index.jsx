@@ -28,14 +28,29 @@ export const Friends = () => {
   }, []);
   // block friend
   const handleBlock = (data) => {
-    set(push(ref(db, "block")), {
-      blockname: data.recivername,
-      blockid: data.reciverid,
-      blockedbyname: data.sendername,
-      blockedbyid: data.senderid,
-    }).then(() => {
-      remove(ref(db, "Friends/" + data.id));
-    });
+    if (user.uid === data.senderid) {
+      set(push(ref(db, "block")), {
+        blockname: data.recivername,
+        blockid: data.reciverid,
+        blockedbyname: data.sendername,
+        blockedbyid: data.senderid,
+      }).then(() => {
+        remove(ref(db, "Friends/" + data.id));
+      });
+    } else {
+      set(push(ref(db, "block")), {
+        blockname: data.sendername,
+        blockid: data.senderid,
+        blockedbyname: data.recivername,
+        blockedbyid: data.reciverid,
+      }).then(() => {
+        remove(ref(db, "Friends/" + data.id));
+      });
+    }
+  };
+  // unfriend friend
+  const handleUnfriend = (data) => {
+    remove(ref(db, "Friends/" + data.id));
   };
   return (
     <>
@@ -65,7 +80,12 @@ export const Friends = () => {
                 >
                   Block
                 </Button>
-                <Button variant="outlined" size="small" className="Unfriend">
+                <Button
+                  onClick={() => handleUnfriend(item)}
+                  variant="outlined"
+                  size="small"
+                  className="Unfriend"
+                >
                   Unfriend
                 </Button>
               </div>
