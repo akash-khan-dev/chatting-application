@@ -24,6 +24,11 @@
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .group-header h3 {
   font-family: var(--poppins);
   font-weight: 600;
@@ -69,11 +74,31 @@
   background: none;
   border: none;
   width: 100%;
-  background-color: var(--primary-color);
+  background-color: var(--primary-color) !important ;
   font-family: var(--poppins);
   font-weight: 600;
   color: var(--white-color);
-  padding: 5px 0px;
+  padding: 4px 0px;
   cursor: pointer;
   border-radius: 5px;
+}
+
+.modal-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  background-color: #f3f3f3;
+  padding: 16px;
+  border-radius: 10px;
+  text-align: center;
+}
+.modal-header {
+  text-align: center;
+}
+.modal-btn {
+  background-color: var(--primary-color) !important;
+  margin-top: 15px !important;
+  width: 200px;
 }

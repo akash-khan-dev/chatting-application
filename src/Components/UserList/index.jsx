@@ -20,6 +20,7 @@ const UserList = () => {
   const [cancle, setCancle] = useState([]);
 
   const user = useSelector((user) => user.logIn.login);
+
   //  show user
   useEffect(() => {
     const starCountRef = ref(db, "users");
@@ -83,10 +84,7 @@ const UserList = () => {
 
   const handleRevome = (id) => {
     remove(ref(db, "friendsReuquest/" + id));
-
-    console.log(id);
   };
-  console.log(cancle);
 
   return (
     <>
