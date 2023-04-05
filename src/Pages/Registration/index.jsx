@@ -54,14 +54,11 @@ export const Registration = () => {
           updateProfile(auth.currentUser, {
             displayName: formik.values.fullname,
           }).then(() => {
-            sendEmailVerification(auth.currentUser)
-              .then(() => {
-                set(ref(db, "users/" + user.uid), {
-                  username: user.displayName,
-                  email: user.email,
-                });
-              })
-              .then(() => {
+            sendEmailVerification(auth.currentUser).then(() => {
+              set(ref(db, "users/" + user.uid), {
+                username: user.displayName,
+                email: user.email,
+              }).then(() => {
                 toast.success("Registration done! Please check your email", {
                   position: "bottom-center",
                   autoClose: 1500,
@@ -75,6 +72,7 @@ export const Registration = () => {
                   navigate("/login");
                 }, 2000);
               });
+            });
           });
         })
         .catch((error) => {

@@ -27,10 +27,12 @@ export const FriendRequest = () => {
       setFriends(frndArr);
     });
   }, [db, user.uid]);
+
   // accecpt request
   const handleAcceptRequest = (data) => {
     set(push(ref(db, "Friends")), {
       ...data,
+      currentProfile: user.photoURL,
     }).then(() => {
       remove(ref(db, "friendsReuquest/" + data.id));
     });
@@ -52,7 +54,7 @@ export const FriendRequest = () => {
             friends.map((item, i) => (
               <div key={i} className="friend-request-wrapper">
                 <div className="friend-request-img">
-                  <img src="./images/akash.jpg" alt="man" />
+                  <img src={item.profile || "./images/man.jpg"} alt="man" />
                 </div>
                 <div className="friend-request-name">
                   <h5>{item.sendername}</h5>

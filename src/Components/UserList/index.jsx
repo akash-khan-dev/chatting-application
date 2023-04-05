@@ -11,8 +11,10 @@ import {
   remove,
 } from "firebase/database";
 import { useSelector } from "react-redux";
+import { getStorage, ref as Ref, getDownloadURL } from "firebase/storage";
 
 const UserList = () => {
+  const storage = getStorage();
   const db = getDatabase();
   const [users, setUsers] = useState([]);
   const [friendList, setFriendList] = useState([]);
@@ -20,7 +22,6 @@ const UserList = () => {
   const [cancle, setCancle] = useState([]);
 
   const user = useSelector((user) => user.logIn.login);
-
   //  show user
   useEffect(() => {
     const starCountRef = ref(db, "users");
@@ -28,13 +29,18 @@ const UserList = () => {
       const users = [];
       snapshot.forEach((userList) => {
         if (user.uid !== userList.key) {
-          users.push({ ...userList.val(), id: userList.key });
+          getDownloadURL(Ref(storage, userList.key)).then((URL) => {
+            users.push({
+              ...userList.val(),
+              id: userList.key,
+              profile: URL,
+            });
+            setUsers([...users]);
+          });
         }
       });
-
-      setUsers(users);
     });
-  }, [db, user.uid]);
+  }, [db, user.uid, storage]);
 
   // send request
   const handleFriendRequest = (data) => {
@@ -43,9 +49,10 @@ const UserList = () => {
       senderid: user.uid,
       recivername: data.username,
       reciverid: data.id,
+      profile: user.photoURL,
     });
   };
-
+  console.log(user);
   // show friendRequest
   useEffect(() => {
     const starCountRef = ref(db, "friendsReuquest");
@@ -85,7 +92,19 @@ const UserList = () => {
   const handleRevome = (id) => {
     remove(ref(db, "friendsReuquest/" + id));
   };
-
+  // block button show
+  const [showBLock, setShowBlock] = useState([]);
+  useEffect(() => {
+    const starCountRef = ref(db, "block");
+    onValue(starCountRef, (snapshot) => {
+      let showBlockArr = [];
+      snapshot.forEach((item) => {
+        showBlockArr.push(item.val().blockedbyid + item.val().blockid);
+      });
+      setShowBlock(showBlockArr);
+    });
+  }, [db]);
+  // console.log("showBLock", showBLock);
   return (
     <>
       <div className="user-list">
@@ -96,7 +115,7 @@ const UserList = () => {
           {users.map((item, i) => (
             <div key={i} className="user-list-wrapper">
               <div className="user-list-img">
-                <img src="./images/akash.jpg" alt="akash" />
+                <img src={item.profile || "./images/akash.jpg"} alt="" />
               </div>
               <div className="user-list-name">
                 <h5>{item.username}</h5>
@@ -126,6 +145,16 @@ const UserList = () => {
                   className="user-list-btn"
                 >
                   cancle
+                </Button>
+              ) : showBLock.includes(item.id + user.uid) ||
+                showBLock.includes(user.uid + item.id) ? (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  disabled
+                  className="user-list-btn"
+                >
+                  Block
                 </Button>
               ) : (
                 <Button

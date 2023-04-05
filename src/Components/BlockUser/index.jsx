@@ -27,12 +27,16 @@ const BlockUser = () => {
             id: item.key,
             block: item.val().blockname,
             blockid: item.val().blockid,
+            profile: item.val().profile,
+            currentProfile: item.val().currentProfile,
           });
         } else {
           blockArr.push({
             id: item.key,
             blockedbyname: item.val().blockedbyname,
             blockedbyid: item.val().blockedbyid,
+            profile: item.val().profile,
+            currentProfile: item.val().currentProfile,
           });
         }
         // blockArr.push({ ...item.val(), id: item.key });
@@ -47,6 +51,8 @@ const BlockUser = () => {
       sendername: item.block,
       reciverid: user.uid,
       recivername: user.displayName,
+      profile: item.profile,
+      currentProfile: item.currentProfile,
     }).then(() => {
       remove(ref(db, "block/" + item.id));
     });
@@ -62,7 +68,11 @@ const BlockUser = () => {
           {blokUser.map((item, i) => (
             <div key={i} className="block-user-wrapper">
               <div className="block-user-img">
-                <img src="./images/akash.jpg" alt="akash" />
+                {user.photoURL === item.profile ? (
+                  <img src={item.currentProfile} alt="akash" />
+                ) : (
+                  <img src={item.profile} alt="akash" />
+                )}
               </div>
               <div className="block-user-name">
                 <h5>{item.block}</h5>

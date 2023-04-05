@@ -21,11 +21,18 @@ export const Friends = () => {
     onValue(starCountRef, (snapshot) => {
       let friensArr = [];
       snapshot.forEach((friens) => {
-        friensArr.push({ ...friens.val(), id: friens.key });
+        if (
+          (user.uid === friens.val().senderid &&
+            user.uid !== friens.val().reciverid) ||
+          (user.uid === friens.val().reciverid &&
+            user.uid !== friens.val().senderid)
+        ) {
+          friensArr.push({ ...friens.val(), id: friens.key });
+        }
       });
       setAllFriends(friensArr);
     });
-  }, []);
+  }, [db, user.uid]);
   // block friend
   const handleBlock = (data) => {
     if (user.uid === data.senderid) {
@@ -34,6 +41,8 @@ export const Friends = () => {
         blockid: data.reciverid,
         blockedbyname: data.sendername,
         blockedbyid: data.senderid,
+        profile: data.profile,
+        currentProfile: data.currentProfile,
       }).then(() => {
         remove(ref(db, "Friends/" + data.id));
       });
@@ -43,6 +52,8 @@ export const Friends = () => {
         blockid: data.senderid,
         blockedbyname: data.recivername,
         blockedbyid: data.reciverid,
+        profile: data.profile,
+        currentProfile: data.currentProfile,
       }).then(() => {
         remove(ref(db, "Friends/" + data.id));
       });
@@ -62,7 +73,11 @@ export const Friends = () => {
           {allFriends.map((item, i) => (
             <div key={i} className="friends-wrapper">
               <div className="friends-img">
-                <img src="./images/akash.jpg" alt="akash" />
+                {user.photoURL === item.profile ? (
+                  <img src={item.currentProfile} alt="akash" />
+                ) : (
+                  <img src={item.profile} alt="akash" />
+                )}
               </div>
               <div className="friends-name">
                 <h5>
