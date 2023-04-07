@@ -20,19 +20,17 @@ export const FriendRequest = () => {
     onValue(starCountRef, (snapshot) => {
       let frndArr = [];
       snapshot.forEach((item) => {
-        if (item.val().reciverid === user.uid) {
+        if (user.uid === item.val().reciverid) {
           frndArr.push({ ...item.val(), id: item.key });
         }
       });
       setFriends(frndArr);
     });
   }, [db, user.uid]);
-
   // accecpt request
   const handleAcceptRequest = (data) => {
     set(push(ref(db, "Friends")), {
       ...data,
-      currentProfile: user.photoURL,
     }).then(() => {
       remove(ref(db, "friendsReuquest/" + data.id));
     });
@@ -53,8 +51,15 @@ export const FriendRequest = () => {
           {friends &&
             friends.map((item, i) => (
               <div key={i} className="friend-request-wrapper">
+                {console.log("friendsRequest", item)}
                 <div className="friend-request-img">
-                  <img src={item.profile || "./images/man.jpg"} alt="man" />
+                  <img
+                    src={item.currentProfile || "./images/man.jpg"}
+                    onError={(e) => {
+                      e.target.src = "./images/man.jpg";
+                    }}
+                    alt="man"
+                  />
                 </div>
                 <div className="friend-request-name">
                   <h5>{item.sendername}</h5>

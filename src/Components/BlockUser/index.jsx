@@ -28,7 +28,7 @@ const BlockUser = () => {
             block: item.val().blockname,
             blockid: item.val().blockid,
             profile: item.val().profile,
-            currentProfile: item.val().currentProfile,
+            reciverProfile: item.val().blockProfile,
           });
         } else {
           blockArr.push({
@@ -36,23 +36,24 @@ const BlockUser = () => {
             blockedbyname: item.val().blockedbyname,
             blockedbyid: item.val().blockedbyid,
             profile: item.val().profile,
-            currentProfile: item.val().currentProfile,
+            currentProfile: item.val().blockbyPfofile,
           });
         }
         // blockArr.push({ ...item.val(), id: item.key });
       });
       serBlockUser(blockArr);
     });
-  }, [db]);
+  }, [db, user.uid]);
   // handle Unblock
+  console.log("blokUserblokUser", blokUser);
   const handleUnblock = (item) => {
     set(push(ref(db, "Friends")), {
       senderid: item.blockid,
       sendername: item.block,
       reciverid: user.uid,
       recivername: user.displayName,
-      profile: item.profile,
-      currentProfile: item.currentProfile,
+      reciverProfile: user.photoURL ?? "./images/man.jpg",
+      currentProfile: item.reciverProfile,
     }).then(() => {
       remove(ref(db, "block/" + item.id));
     });
@@ -68,11 +69,15 @@ const BlockUser = () => {
           {blokUser.map((item, i) => (
             <div key={i} className="block-user-wrapper">
               <div className="block-user-img">
-                {user.photoURL === item.profile ? (
-                  <img src={item.currentProfile} alt="akash" />
-                ) : (
-                  <img src={item.profile} alt="akash" />
-                )}
+                {
+                  <img
+                    src={item.reciverProfile ?? item.currentProfile}
+                    onError={(e) => {
+                      e.target.src = "./images/man.jpg";
+                    }}
+                    alt="av"
+                  />
+                }
               </div>
               <div className="block-user-name">
                 <h5>{item.block}</h5>

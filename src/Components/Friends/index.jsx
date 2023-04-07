@@ -34,15 +34,16 @@ export const Friends = () => {
     });
   }, [db, user.uid]);
   // block friend
+
   const handleBlock = (data) => {
     if (user.uid === data.senderid) {
       set(push(ref(db, "block")), {
         blockname: data.recivername,
         blockid: data.reciverid,
+        blockProfile: data.reciverProfile,
         blockedbyname: data.sendername,
         blockedbyid: data.senderid,
-        profile: data.profile,
-        currentProfile: data.currentProfile,
+        blockbyPfofile: data.currentProfile,
       }).then(() => {
         remove(ref(db, "Friends/" + data.id));
       });
@@ -50,10 +51,10 @@ export const Friends = () => {
       set(push(ref(db, "block")), {
         blockname: data.sendername,
         blockid: data.senderid,
+        blockbyPfofile: data.reciverProfile,
         blockedbyname: data.recivername,
         blockedbyid: data.reciverid,
-        profile: data.profile,
-        currentProfile: data.currentProfile,
+        blockProfile: data.currentProfile,
       }).then(() => {
         remove(ref(db, "Friends/" + data.id));
       });
@@ -73,10 +74,22 @@ export const Friends = () => {
           {allFriends.map((item, i) => (
             <div key={i} className="friends-wrapper">
               <div className="friends-img">
-                {user.photoURL === item.profile ? (
-                  <img src={item.currentProfile} alt="akash" />
+                {user.uid === item.reciverid ? (
+                  <img
+                    src={item.currentProfile || "./images/man.jpg"}
+                    onError={(e) => {
+                      e.target.src = "./images/man.jpg";
+                    }}
+                    alt="akash"
+                  />
                 ) : (
-                  <img src={item.profile} alt="akash" />
+                  <img
+                    src={item.reciverProfile || "./images/man.jpg"}
+                    onError={(e) => {
+                      e.target.src = "./images/man.jpg";
+                    }}
+                    alt="akash"
+                  />
                 )}
               </div>
               <div className="friends-name">

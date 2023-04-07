@@ -29,19 +29,28 @@ const UserList = () => {
       const users = [];
       snapshot.forEach((userList) => {
         if (user.uid !== userList.key) {
-          getDownloadURL(Ref(storage, userList.key)).then((URL) => {
-            users.push({
-              ...userList.val(),
-              id: userList.key,
-              profile: URL,
+          getDownloadURL(Ref(storage, userList.key))
+            .then((URL) => {
+              users.push({
+                ...userList.val(),
+                id: userList.key,
+                profile: URL,
+              });
+            })
+            .catch((error) => {
+              users.push({
+                ...userList.val(),
+                id: userList.key,
+                profile: null,
+              });
+            })
+            .then(() => {
+              setUsers([...users]);
             });
-            setUsers([...users]);
-          });
         }
       });
     });
   }, [db, user.uid, storage]);
-
   // send request
   const handleFriendRequest = (data) => {
     set(push(ref(db, "friendsReuquest")), {
@@ -49,10 +58,11 @@ const UserList = () => {
       senderid: user.uid,
       recivername: data.username,
       reciverid: data.id,
-      profile: user.photoURL,
+      reciverProfile: data.profile ?? "./images/man.jpg",
+      currentProfile: user.photoURL ?? "./images/man.jpg",
     });
   };
-  console.log(user);
+
   // show friendRequest
   useEffect(() => {
     const starCountRef = ref(db, "friendsReuquest");
@@ -104,7 +114,7 @@ const UserList = () => {
       setShowBlock(showBlockArr);
     });
   }, [db]);
-  // console.log("showBLock", showBLock);
+
   return (
     <>
       <div className="user-list">
@@ -115,7 +125,13 @@ const UserList = () => {
           {users.map((item, i) => (
             <div key={i} className="user-list-wrapper">
               <div className="user-list-img">
-                <img src={item.profile || "./images/akash.jpg"} alt="" />
+                <img
+                  src={item.profile || "./images/man.jpg"}
+                  onError={(e) => {
+                    e.target.src = "./images/man.jpg";
+                  }}
+                  alt="man"
+                />
               </div>
               <div className="user-list-name">
                 <h5>{item.username}</h5>

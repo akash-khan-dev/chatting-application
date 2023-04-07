@@ -29,11 +29,13 @@ export const Sidebar = () => {
       <div className="sidebar-box">
         <div>
           <div onClick={handlePopUp} className="sidebar-img">
-            {users.photoURL ? (
-              <img src={users.photoURL} alt="man" />
-            ) : (
-              <img src="./images/man.jpg" alt="man" />
-            )}
+            <img
+              src={users.photoURL || "./images/man.jpg"}
+              onError={(e) => {
+                e.target.src = "./images/man.jpg";
+              }}
+              alt="man"
+            />
 
             <div className="sidebar-overlay">
               <AiOutlineCloudDownload />
