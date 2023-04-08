@@ -99,3 +99,13 @@
   color: var(--white-color);
   padding: 2px;
 }
+.friend-request-btn .reject {
+  background: none !important;
+  border: none !important;
+  width: 100%;
+  background-color: rgba(208, 68, 36, 0.949) !important;
+  font-family: var(--poppins);
+  font-weight: 600;
+  color: var(--white-color);
+  padding: 2px;
+}

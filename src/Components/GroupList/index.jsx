@@ -8,6 +8,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
 
 export const GroupList = () => {
@@ -45,6 +46,17 @@ export const GroupList = () => {
   }, [db, user.uid]);
 
   // join grups
+  const handleJoin = (data) => {
+    set(push(ref(db, "JoinGroupRequest")), {
+      groupid: data.id,
+      adminid: data.adminid,
+      adminname: data.adminname,
+      groupname: data.groupname,
+      groupTag: data.groupTag,
+      username: user.displayName,
+      userid: user.uid,
+    });
+  };
 
   return (
     <>
@@ -54,21 +66,27 @@ export const GroupList = () => {
           <Button onClick={handleOpen}>Create Group</Button>
         </div>
         <div className="group-item-container">
-          {join.map((item, i) => (
-            <div className="group-item-wrapper">
-              <div className="group-img">
-                <img src="./images/akash.jpg" alt="man" />
+          {join.length === 0 ? (
+            <Alert severity="error">no more groups yet</Alert>
+          ) : (
+            join.map((item, i) => (
+              <div className="group-item-wrapper">
+                <div className="group-img">
+                  <img src="./images/akash.jpg" alt="man" />
+                </div>
+                <div className="group-name">
+                  <h5>{item.groupname}</h5>
+                  <p>Admin:{item.adminname}</p>
+                  <span>{item.groupTag}</span>
+                </div>
+                <div className="group-btn">
+                  <Button onClick={() => handleJoin(item)} variant="contained">
+                    join
+                  </Button>
+                </div>
               </div>
-              <div className="group-name">
-                <h5>{item.groupname}</h5>
-                <p>Admin:{item.adminname}</p>
-                <span>{item.groupTag}</span>
-              </div>
-              <div className="group-btn">
-                <Button variant="contained">join</Button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
         <div className="div">
           <Modal

@@ -3,13 +3,21 @@ import "./style.css";
 import { Button } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import { BiArrowBack } from "react-icons/bi";
-import { getDatabase, onValue, ref } from "firebase/database";
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+} from "firebase/database";
 import { useSelector } from "react-redux";
 
 const MyGroup = () => {
   const db = getDatabase();
   const user = useSelector((user) => user.logIn.login);
   const [myGroup, setMyGroup] = useState([]);
+  const [joinGroup, setJoinGroup] = useState([]);
   const [showBack, setShowBack] = useState(false);
   // get all groups
   useEffect(() => {
@@ -27,8 +35,30 @@ const MyGroup = () => {
   // show all request
   const handleShowRequest = (data) => {
     setShowBack(true);
+    const starCountRef = ref(db, "JoinGroupRequest");
+    onValue(starCountRef, (snapshot) => {
+      let joinArr = [];
+      snapshot.forEach((item) => {
+        if (user.uid === item.val().adminid && item.val().groupid === data.id) {
+          joinArr.push({ ...item.val(), id: item.key });
+        }
+      });
+      setJoinGroup(joinArr);
+    });
   };
-
+  // group accept
+  const handleGroupAccept = (data) => {
+    set(push(ref(db, "groupmember")), {
+      adminid: data.adminid,
+      groupid: data.groupid,
+      userid: data.userid,
+      groupname: data.groupname,
+      adminname: data.adminname,
+      username: data.username,
+    }).then(() => {
+      remove(ref(db, "JoinGroupRequest/" + data.id));
+    });
+  };
   return (
     <>
       <div className="my-group">
@@ -43,6 +73,34 @@ const MyGroup = () => {
           )}
           {myGroup.length === 0 ? (
             <Alert severity="error">No Groups Create yet</Alert>
+          ) : showBack ? (
+            joinGroup.length === 0 ? (
+              <Alert severity="error">No Request yet</Alert>
+            ) : (
+              joinGroup.map((item, i) => (
+                <div key={i} className="my-group-wrapper">
+                  <div className="my-group-img">
+                    <img src="./images/akash.jpg" alt="akash" />
+                  </div>
+                  <div className="my-group-name">
+                    <h5>{item.username}</h5>
+                  </div>
+                  <div className="friend-request-btn">
+                    <Button
+                      onClick={() => handleGroupAccept(item)}
+                      variant="contained"
+                      size="small"
+                      className="accept"
+                    >
+                      accept
+                    </Button>
+                    <Button variant="contained" size="small" className="reject">
+                      reject
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )
           ) : (
             myGroup.map((item, i) => (
               <div key={i} className="my-group-wrapper">
