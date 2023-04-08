@@ -37,6 +37,7 @@
 }
 .group-item-wrapper {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin-top: 10px;
   padding-bottom: 15px;
@@ -64,6 +65,18 @@
   font-family: var(--poppins);
   font-weight: 600;
   font-size: 18px;
+  color: var(--black);
+}
+.group-name p {
+  font-family: var(--poppins);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--black);
+}
+.group-name span {
+  font-family: var(--poppins);
+  font-weight: 400;
+  font-size: 13px;
   color: var(--black);
 }
 .group-btn {

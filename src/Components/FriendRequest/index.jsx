@@ -51,7 +51,6 @@ export const FriendRequest = () => {
           {friends &&
             friends.map((item, i) => (
               <div key={i} className="friend-request-wrapper">
-                {console.log("friendsRequest", item)}
                 <div className="friend-request-img">
                   <img
                     src={item.currentProfile || "./images/man.jpg"}

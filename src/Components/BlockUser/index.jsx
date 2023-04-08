@@ -22,22 +22,30 @@ const BlockUser = () => {
     onValue(starCountRef, (snapshot) => {
       let blockArr = [];
       snapshot.forEach((item) => {
-        if (item.val().blockedbyid === user.uid) {
-          blockArr.push({
-            id: item.key,
-            block: item.val().blockname,
-            blockid: item.val().blockid,
-            profile: item.val().profile,
-            reciverProfile: item.val().blockProfile,
-          });
-        } else {
-          blockArr.push({
-            id: item.key,
-            blockedbyname: item.val().blockedbyname,
-            blockedbyid: item.val().blockedbyid,
-            profile: item.val().profile,
-            currentProfile: item.val().blockbyPfofile,
-          });
+        console.log("item", item.val());
+        if (
+          (user.uid === item.val().blockedbyid &&
+            user.uid !== item.val().blockid) ||
+          (user.uid === item.val().blockid &&
+            user.uid !== item.val().blockedbyid)
+        ) {
+          if (item.val().blockedbyid === user.uid) {
+            blockArr.push({
+              id: item.key,
+              block: item.val().blockname,
+              blockid: item.val().blockid,
+              profile: item.val().profile,
+              reciverProfile: item.val().blockProfile,
+            });
+          } else {
+            blockArr.push({
+              id: item.key,
+              blockedbyname: item.val().blockedbyname,
+              blockedbyid: item.val().blockedbyid,
+              profile: item.val().profile,
+              currentProfile: item.val().blockbyPfofile,
+            });
+          }
         }
         // blockArr.push({ ...item.val(), id: item.key });
       });
@@ -45,7 +53,7 @@ const BlockUser = () => {
     });
   }, [db, user.uid]);
   // handle Unblock
-  console.log("blokUserblokUser", blokUser);
+
   const handleUnblock = (item) => {
     set(push(ref(db, "Friends")), {
       senderid: item.blockid,

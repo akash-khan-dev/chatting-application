@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-import { getDatabase, push, ref, set } from "firebase/database";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 
 export const GroupList = () => {
@@ -17,8 +17,9 @@ export const GroupList = () => {
   const handleClose = () => setOpen(false);
   const [groupName, setGroupName] = useState("");
   const [groupTag, setGroupTag] = useState("");
+  const [join, setJoin] = useState([]);
   const user = useSelector((user) => user.logIn.login);
-
+  // create a new groups
   const handleGroupCreate = () => {
     set(push(ref(db, "Groups")), {
       groupname: groupName,
@@ -29,6 +30,22 @@ export const GroupList = () => {
       setOpen(false);
     });
   };
+  // get grups info
+  useEffect(() => {
+    const starCountRef = ref(db, "Groups");
+    onValue(starCountRef, (snapshot) => {
+      let joinArr = [];
+      snapshot.forEach((item) => {
+        if (user.uid !== item.val().adminid) {
+          joinArr.push({ ...item.val(), id: item.key });
+        }
+      });
+      setJoin(joinArr);
+    });
+  }, [db, user.uid]);
+
+  // join grups
+
   return (
     <>
       <div className="group-list">
@@ -37,17 +54,21 @@ export const GroupList = () => {
           <Button onClick={handleOpen}>Create Group</Button>
         </div>
         <div className="group-item-container">
-          <div className="group-item-wrapper">
-            <div className="group-img">
-              <img src="./images/akash.jpg" alt="man" />
+          {join.map((item, i) => (
+            <div className="group-item-wrapper">
+              <div className="group-img">
+                <img src="./images/akash.jpg" alt="man" />
+              </div>
+              <div className="group-name">
+                <h5>{item.groupname}</h5>
+                <p>Admin:{item.adminname}</p>
+                <span>{item.groupTag}</span>
+              </div>
+              <div className="group-btn">
+                <Button variant="contained">join</Button>
+              </div>
             </div>
-            <div className="group-name">
-              <h5>Friends Forever</h5>
-            </div>
-            <div className="group-btn">
-              <Button variant="contained">join</Button>
-            </div>
-          </div>
+          ))}
         </div>
         <div className="div">
           <Modal

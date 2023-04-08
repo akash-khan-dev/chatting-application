@@ -29,16 +29,23 @@
   font-weight: 600;
   font-size: 20px;
   color: var(--black);
+  margin-bottom: 10px;
 }
 .my-group-wrapper {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 }
 .my-group-wrapper:last-child {
   border-bottom: none;
+}
+.show-back-icon svg {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
 }
 .my-group-img {
   width: 60px;
@@ -52,7 +59,7 @@
   object-fit: cover;
 }
 .my-group-name {
-  width: 170px;
+  width: 225px;
   margin-top: 10px;
 }
 .my-group-name h5 {
@@ -70,4 +77,25 @@
   font-size: 10px;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.5);
+}
+.friend-request-btn .accept {
+  background: none !important;
+  border: none !important;
+  width: 100%;
+  background-color: var(--primary-color) !important;
+  font-family: var(--poppins);
+  font-weight: 600;
+  color: var(--white-color);
+  margin-bottom: 3px;
+  padding: 2px;
+}
+.friend-request-btn .remove {
+  background: none !important;
+  border: none !important;
+  width: 100%;
+  background-color: rgba(112, 155, 63, 0.949) !important;
+  font-family: var(--poppins);
+  font-weight: 600;
+  color: var(--white-color);
+  padding: 2px;
 }
