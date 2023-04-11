@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
 import "./style.css";
 import {
   getDatabase,
@@ -10,6 +11,7 @@ import {
   push,
 } from "firebase/database";
 import { useSelector } from "react-redux";
+
 export const FriendRequest = () => {
   const user = useSelector((user) => user.logIn.login);
   let [friends, setFriends] = useState([]);
@@ -48,7 +50,9 @@ export const FriendRequest = () => {
           <h5>Friend Request</h5>
         </div>
         <div className="friend-request-container">
-          {friends &&
+          {friends.length === 0 ? (
+            <Alert severity="error">no Friends yet!</Alert>
+          ) : (
             friends.map((item, i) => (
               <div key={i} className="friend-request-wrapper">
                 <div className="friend-request-img">
@@ -82,7 +86,8 @@ export const FriendRequest = () => {
                   </Button>
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
       </div>
     </>

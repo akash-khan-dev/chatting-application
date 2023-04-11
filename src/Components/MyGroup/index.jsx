@@ -12,6 +12,9 @@ import {
   set,
 } from "firebase/database";
 import { useSelector } from "react-redux";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 
 const MyGroup = () => {
   const db = getDatabase();
@@ -19,6 +22,7 @@ const MyGroup = () => {
   const [myGroup, setMyGroup] = useState([]);
   const [joinGroup, setJoinGroup] = useState([]);
   const [showBack, setShowBack] = useState(false);
+  const [member, setMember] = useState([]);
   // get all groups
   useEffect(() => {
     const starCountRef = ref(db, "Groups");
@@ -59,6 +63,24 @@ const MyGroup = () => {
       remove(ref(db, "JoinGroupRequest/" + data.id));
     });
   };
+
+  // handle info
+  const handleClose = () => setOpen(false);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = (data) => {
+    setOpen(true);
+    const starCountRef = ref(db, "groupmember");
+    onValue(starCountRef, (snapshot) => {
+      let membarArr = [];
+      snapshot.forEach((item) => {
+        if (user.uid === data.adminid && item.val().groupid === data.id) {
+          membarArr.push({ ...item.val(), id: item.key });
+        }
+      });
+      setMember(membarArr);
+    });
+  };
+
   return (
     <>
       <div className="my-group">
@@ -113,7 +135,12 @@ const MyGroup = () => {
                   <span>{item.groupTag}</span>
                 </div>
                 <div className="friend-request-btn">
-                  <Button variant="contained" size="small" className="accept">
+                  <Button
+                    onClick={() => handleOpen(item)}
+                    variant="contained"
+                    size="small"
+                    className="accept"
+                  >
                     Info
                   </Button>
                   <Button
@@ -129,6 +156,35 @@ const MyGroup = () => {
             ))
           )}
         </div>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="modal-desing">
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              <h4 className="modal-head">See your Group Member</h4>
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              {member.length === 0 ? (
+                <Alert severity="error">No Your Group Member</Alert>
+              ) : (
+                member.map((item) => (
+                  <div className="my-group-wrapper">
+                    <div className="modal-img">
+                      <img src="./images/akash.jpg" alt="akash" />
+                    </div>
+                    <div className="my-group-name modalmane">
+                      <h5>{item.username}</h5>
+                    </div>
+                    <div className="friend-request-btn"></div>
+                  </div>
+                ))
+              )}
+            </Typography>
+          </Box>
+        </Modal>
       </div>
     </>
   );

@@ -9,7 +9,7 @@ import {
   set,
 } from "firebase/database";
 import { useSelector } from "react-redux";
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 
 const BlockUser = () => {
   const db = getDatabase();
@@ -74,30 +74,34 @@ const BlockUser = () => {
           <h5>Blocked User</h5>
         </div>
         <div className="block-user-container">
-          {blokUser.map((item, i) => (
-            <div key={i} className="block-user-wrapper">
-              <div className="block-user-img">
-                {
-                  <img
-                    src={item.reciverProfile ?? item.currentProfile}
-                    onError={(e) => {
-                      e.target.src = "./images/man.jpg";
-                    }}
-                    alt="av"
-                  />
-                }
+          {blokUser.length === 0 ? (
+            <Alert severity="error">no a block Friends !</Alert>
+          ) : (
+            blokUser.map((item, i) => (
+              <div key={i} className="block-user-wrapper">
+                <div className="block-user-img">
+                  {
+                    <img
+                      src={item.reciverProfile ?? item.currentProfile}
+                      onError={(e) => {
+                        e.target.src = "./images/man.jpg";
+                      }}
+                      alt="av"
+                    />
+                  }
+                </div>
+                <div className="block-user-name">
+                  <h5>{item.block}</h5>
+                  <h5>{item.blockedbyname}</h5>
+                </div>
+                <div className="block-user-btn">
+                  {item.blockid && (
+                    <Button onClick={() => handleUnblock(item)}>unblock</Button>
+                  )}
+                </div>
               </div>
-              <div className="block-user-name">
-                <h5>{item.block}</h5>
-                <h5>{item.blockedbyname}</h5>
-              </div>
-              <div className="block-user-btn">
-                {item.blockid && (
-                  <Button onClick={() => handleUnblock(item)}>unblock</Button>
-                )}
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </>

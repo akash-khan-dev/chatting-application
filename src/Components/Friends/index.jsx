@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
+import Alert from "@mui/material/Alert";
 import {
   getDatabase,
   ref,
@@ -71,54 +72,58 @@ export const Friends = () => {
           <h3>Friends</h3>
         </div>
         <div className="friends-container">
-          {allFriends.map((item, i) => (
-            <div key={i} className="friends-wrapper">
-              <div className="friends-img">
-                {user.uid === item.reciverid ? (
-                  <img
-                    src={item.currentProfile || "./images/man.jpg"}
-                    onError={(e) => {
-                      e.target.src = "./images/man.jpg";
-                    }}
-                    alt="akash"
-                  />
-                ) : (
-                  <img
-                    src={item.reciverProfile || "./images/man.jpg"}
-                    onError={(e) => {
-                      e.target.src = "./images/man.jpg";
-                    }}
-                    alt="akash"
-                  />
-                )}
+          {allFriends.length === 0 ? (
+            <Alert severity="error">no request yet!</Alert>
+          ) : (
+            allFriends.map((item, i) => (
+              <div key={i} className="friends-wrapper">
+                <div className="friends-img">
+                  {user.uid === item.reciverid ? (
+                    <img
+                      src={item.currentProfile || "./images/man.jpg"}
+                      onError={(e) => {
+                        e.target.src = "./images/man.jpg";
+                      }}
+                      alt="akash"
+                    />
+                  ) : (
+                    <img
+                      src={item.reciverProfile || "./images/man.jpg"}
+                      onError={(e) => {
+                        e.target.src = "./images/man.jpg";
+                      }}
+                      alt="akash"
+                    />
+                  )}
+                </div>
+                <div className="friends-name">
+                  <h5>
+                    {user.uid === item.senderid
+                      ? item.recivername
+                      : item.sendername}
+                  </h5>
+                </div>
+                <div className="friends-btn">
+                  <Button
+                    onClick={() => handleBlock(item)}
+                    variant="outlined"
+                    size="small"
+                    className="block"
+                  >
+                    Block
+                  </Button>
+                  <Button
+                    onClick={() => handleUnfriend(item)}
+                    variant="outlined"
+                    size="small"
+                    className="Unfriend"
+                  >
+                    Unfriend
+                  </Button>
+                </div>
               </div>
-              <div className="friends-name">
-                <h5>
-                  {user.uid === item.senderid
-                    ? item.recivername
-                    : item.sendername}
-                </h5>
-              </div>
-              <div className="friends-btn">
-                <Button
-                  onClick={() => handleBlock(item)}
-                  variant="outlined"
-                  size="small"
-                  className="block"
-                >
-                  Block
-                </Button>
-                <Button
-                  onClick={() => handleUnfriend(item)}
-                  variant="outlined"
-                  size="small"
-                  className="Unfriend"
-                >
-                  Unfriend
-                </Button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </>

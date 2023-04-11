@@ -80,7 +80,7 @@
   color: var(--black);
 }
 .group-btn {
-  width: 87px;
+  width: 100px;
   padding-top: 10px;
 }
 .group-btn button {
@@ -94,6 +94,10 @@
   padding: 4px 0px;
   cursor: pointer;
   border-radius: 5px;
+}
+.group-btn button svg {
+  margin-right: 4px;
+  margin-top: -5px;
 }
 
 .modal-box {

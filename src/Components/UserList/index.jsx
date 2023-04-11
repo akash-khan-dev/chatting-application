@@ -12,6 +12,7 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { getStorage, ref as Ref, getDownloadURL } from "firebase/storage";
+import { Search } from "../Search";
 
 const UserList = () => {
   const storage = getStorage();
@@ -20,6 +21,7 @@ const UserList = () => {
   const [friendList, setFriendList] = useState([]);
   const [frnd, setFrnd] = useState([]);
   const [cancle, setCancle] = useState([]);
+  const [search, setSearch] = useState([]);
 
   const user = useSelector((user) => user.logIn.login);
   //  show user
@@ -114,76 +116,156 @@ const UserList = () => {
       setShowBlock(showBlockArr);
     });
   }, [db]);
-
+  // handle search
+  // const [error, setError] = useState("");
+  const handleSearch = (e) => {
+    let search = [];
+    users.filter((item) => {
+      if (item.username.toLowerCase().includes(e.target.value.toLowerCase())) {
+        search.push(item);
+        setSearch(search);
+      } else {
+        search.push("not match");
+        setSearch(search);
+      }
+    });
+  };
   return (
     <>
+      {<Search handleSearch={handleSearch} />}
       <div className="user-list">
         <div className="user-list-header">
           <h3>User List</h3>
         </div>
         <div className="user-list-container">
-          {users.map((item, i) => (
-            <div key={i} className="user-list-wrapper">
-              <div className="user-list-img">
-                <img
-                  src={item.profile || "./images/man.jpg"}
-                  onError={(e) => {
-                    e.target.src = "./images/man.jpg";
-                  }}
-                  alt="man"
-                />
-              </div>
-              <div className="user-list-name">
-                <h5>{item.username}</h5>
-              </div>
-              {frnd.includes(item.id + user.uid) ||
-              frnd.includes(user.uid + item.id) ? (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  className="user-list-btn"
-                >
-                  friend
-                </Button>
-              ) : friendList.includes(item.id + user.uid) ||
-                friendList.includes(user.uid + item.id) ? (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() =>
-                    handleRevome(
-                      cancle.find(
-                        (req) =>
-                          req.reciverid === item.id && req.senderid === user.uid
-                      ).id
-                    )
-                  }
-                  className="user-list-btn"
-                >
-                  cancle
-                </Button>
-              ) : showBLock.includes(item.id + user.uid) ||
-                showBLock.includes(user.uid + item.id) ? (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  disabled
-                  className="user-list-btn"
-                >
-                  Block
-                </Button>
-              ) : (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => handleFriendRequest(item)}
-                  className="user-list-btn"
-                >
-                  add
-                </Button>
-              )}
-            </div>
-          ))}
+          {search.length > 0
+            ? search.map((item, i) => (
+                <div key={i} className="user-list-wrapper">
+                  <div className="user-list-img">
+                    <img
+                      src={item.profile || "./images/man.jpg"}
+                      onError={(e) => {
+                        e.target.src = "./images/man.jpg";
+                      }}
+                      alt="man"
+                    />
+                  </div>
+                  <div className="user-list-name">
+                    <h5>{item.username}</h5>
+                  </div>
+                  {frnd.includes(item.id + user.uid) ||
+                  frnd.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      className="user-list-btn"
+                    >
+                      friend
+                    </Button>
+                  ) : friendList.includes(item.id + user.uid) ||
+                    friendList.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() =>
+                        handleRevome(
+                          cancle.find(
+                            (req) =>
+                              req.reciverid === item.id &&
+                              req.senderid === user.uid
+                          ).id
+                        )
+                      }
+                      className="user-list-btn"
+                    >
+                      cancle
+                    </Button>
+                  ) : showBLock.includes(item.id + user.uid) ||
+                    showBLock.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      disabled
+                      className="user-list-btn"
+                    >
+                      Block
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleFriendRequest(item)}
+                      className="user-list-btn"
+                    >
+                      add
+                    </Button>
+                  )}
+                </div>
+              ))
+            : users.map((item, i) => (
+                <div key={i} className="user-list-wrapper">
+                  <div className="user-list-img">
+                    <img
+                      src={item.profile || "./images/man.jpg"}
+                      onError={(e) => {
+                        e.target.src = "./images/man.jpg";
+                      }}
+                      alt="man"
+                    />
+                  </div>
+                  <div className="user-list-name">
+                    <h5>{item.username}</h5>
+                  </div>
+                  {frnd.includes(item.id + user.uid) ||
+                  frnd.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      className="user-list-btn"
+                    >
+                      friend
+                    </Button>
+                  ) : friendList.includes(item.id + user.uid) ||
+                    friendList.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() =>
+                        handleRevome(
+                          cancle.find(
+                            (req) =>
+                              req.reciverid === item.id &&
+                              req.senderid === user.uid
+                          ).id
+                        )
+                      }
+                      className="user-list-btn"
+                    >
+                      cancle
+                    </Button>
+                  ) : showBLock.includes(item.id + user.uid) ||
+                    showBLock.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      disabled
+                      className="user-list-btn"
+                    >
+                      Block
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleFriendRequest(item)}
+                      className="user-list-btn"
+                    >
+                      add
+                    </Button>
+                  )}
+                </div>
+              ))}
+          {}
         </div>
       </div>
     </>

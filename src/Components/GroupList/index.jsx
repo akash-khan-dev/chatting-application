@@ -7,7 +7,15 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import { MdGroups } from "react-icons/md";
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+} from "firebase/database";
 import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
 
@@ -19,6 +27,7 @@ export const GroupList = () => {
   const [groupName, setGroupName] = useState("");
   const [groupTag, setGroupTag] = useState("");
   const [join, setJoin] = useState([]);
+  const [cancle, seCancle] = useState([]);
   const user = useSelector((user) => user.logIn.login);
   // create a new groups
   const handleGroupCreate = () => {
@@ -45,7 +54,7 @@ export const GroupList = () => {
     });
   }, [db, user.uid]);
 
-  // join grups
+  //  join gruops handling
   const handleJoin = (data) => {
     set(push(ref(db, "JoinGroupRequest")), {
       groupid: data.id,
@@ -57,7 +66,47 @@ export const GroupList = () => {
       userid: user.uid,
     });
   };
+  // show cancle button
+  useEffect(() => {
+    const starCountRef = ref(db, "JoinGroupRequest");
+    onValue(starCountRef, (snapshot) => {
+      let cancleArr = [];
+      snapshot.forEach((item) => {
+        cancleArr.push(item.val().adminid);
+      });
+      seCancle(cancleArr);
+    });
+  }, [db, user.uid]);
 
+  // cancle button work
+  const [removeCancle, setRemoveCancle] = useState();
+  useEffect(() => {
+    const starCountRef = ref(db, "JoinGroupRequest");
+    onValue(starCountRef, (snapshot) => {
+      let removeArr = [];
+      snapshot.forEach((item) => {
+        removeArr.push({ ...item.val(), id: item.key });
+      });
+      setRemoveCancle(removeArr);
+    });
+  }, [db, user.uid]);
+  const handleCancleJoin = (id) => {
+    remove(ref(db, "JoinGroupRequest/" + id));
+  };
+
+  // joined button show
+  const [showJoined, setShowJoined] = useState([]);
+  useEffect(() => {
+    const starCountRef = ref(db, "groupmember");
+    onValue(starCountRef, (snapshot) => {
+      let joinedArr = [];
+      snapshot.forEach((item) => {
+        joinedArr.push(item.val().adminid + item.val().userid);
+      });
+      setShowJoined(joinedArr);
+    });
+  }, [db, user.uid]);
+  console.log("showJoined", showJoined);
   return (
     <>
       <div className="group-list">
@@ -70,7 +119,7 @@ export const GroupList = () => {
             <Alert severity="error">no more groups yet</Alert>
           ) : (
             join.map((item, i) => (
-              <div className="group-item-wrapper">
+              <div key={i} className="group-item-wrapper">
                 <div className="group-img">
                   <img src="./images/akash.jpg" alt="man" />
                 </div>
@@ -80,9 +129,38 @@ export const GroupList = () => {
                   <span>{item.groupTag}</span>
                 </div>
                 <div className="group-btn">
-                  <Button onClick={() => handleJoin(item)} variant="contained">
-                    join
-                  </Button>
+                  {cancle.includes(item.adminid) ? (
+                    <Button
+                      onClick={() =>
+                        handleCancleJoin(
+                          removeCancle.find(
+                            (id) =>
+                              id.groupid === item.id &&
+                              id.adminid === item.adminid
+                          ).id
+                        )
+                      }
+                      variant="contained"
+                    >
+                      cancle
+                    </Button>
+                  ) : showJoined.includes(
+                      item.adminid + user.uid || user.uid + item.adminid
+                    ) ? (
+                    <Button
+                      onClick={() => handleJoin(item)}
+                      variant="contained"
+                    >
+                      <MdGroups /> Joined
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleJoin(item)}
+                      variant="contained"
+                    >
+                      join gruop
+                    </Button>
+                  )}
                 </div>
               </div>
             ))

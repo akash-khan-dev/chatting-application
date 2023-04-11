@@ -2,7 +2,7 @@ import React from "react";
 import "./style.css";
 import { BsSearch } from "react-icons/bs";
 
-export const Search = () => {
+export const Search = ({ handleSearch }) => {
   return (
     <>
       <div className="search">
@@ -10,7 +10,7 @@ export const Search = () => {
           <BsSearch />
         </div>
         <div className="search-input">
-          <input type="text" placeholder="Search " />
+          <input type="text" placeholder="Search  " onChange={handleSearch} />
         </div>
       </div>
     </>
