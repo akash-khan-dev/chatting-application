@@ -120,16 +120,16 @@ const UserList = () => {
   // const [error, setError] = useState("");
   const handleSearch = (e) => {
     let search = [];
+
     users.filter((item) => {
       if (item.username.toLowerCase().includes(e.target.value.toLowerCase())) {
         search.push(item);
         setSearch(search);
-      } else {
-        search.push("not match");
-        setSearch(search);
       }
     });
   };
+  console.log("search", search);
+
   return (
     <>
       {<Search handleSearch={handleSearch} />}
@@ -265,7 +265,6 @@ const UserList = () => {
                   )}
                 </div>
               ))}
-          {}
         </div>
       </div>
     </>

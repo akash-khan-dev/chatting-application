@@ -50,6 +50,7 @@ const MyGroup = () => {
       setJoinGroup(joinArr);
     });
   };
+  console.log("JoinGroup", joinGroup);
   // group accept
   const handleGroupAccept = (data) => {
     set(push(ref(db, "groupmember")), {
@@ -63,7 +64,10 @@ const MyGroup = () => {
       remove(ref(db, "JoinGroupRequest/" + data.id));
     });
   };
-
+  // handleRejectGroup
+  const handleRejectGroup = (data) => {
+    remove(ref(db, "JoinGroupRequest/" + data.id));
+  };
   // handle info
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState(false);
@@ -102,7 +106,7 @@ const MyGroup = () => {
               joinGroup.map((item, i) => (
                 <div key={i} className="my-group-wrapper">
                   <div className="my-group-img">
-                    <img src="./images/akash.jpg" alt="akash" />
+                    <img src={item.userProfile} alt="akash" />
                   </div>
                   <div className="my-group-name">
                     <h5>{item.username}</h5>
@@ -116,7 +120,12 @@ const MyGroup = () => {
                     >
                       accept
                     </Button>
-                    <Button variant="contained" size="small" className="reject">
+                    <Button
+                      onClick={() => handleRejectGroup(item)}
+                      variant="contained"
+                      size="small"
+                      className="reject"
+                    >
                       reject
                     </Button>
                   </div>

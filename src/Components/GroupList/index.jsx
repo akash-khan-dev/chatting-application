@@ -47,13 +47,12 @@ export const GroupList = () => {
       let joinArr = [];
       snapshot.forEach((item) => {
         if (user.uid !== item.val().adminid) {
-          joinArr.push({ ...item.val(), id: item.key });
+          joinArr.push({ ...item.val(), id: item.key, currentUser: user.uid });
         }
       });
       setJoin(joinArr);
     });
   }, [db, user.uid]);
-
   //  join gruops handling
   const handleJoin = (data) => {
     set(push(ref(db, "JoinGroupRequest")), {
@@ -64,15 +63,18 @@ export const GroupList = () => {
       groupTag: data.groupTag,
       username: user.displayName,
       userid: user.uid,
+      userProfile: user.photoURL ?? "./images/man.jpg",
     });
   };
+
   // show cancle button
   useEffect(() => {
     const starCountRef = ref(db, "JoinGroupRequest");
     onValue(starCountRef, (snapshot) => {
       let cancleArr = [];
       snapshot.forEach((item) => {
-        cancleArr.push(item.val().adminid);
+        console.log("val", item.val());
+        cancleArr.push(item.val().adminid + item.val().userid);
       });
       seCancle(cancleArr);
     });
@@ -106,7 +108,7 @@ export const GroupList = () => {
       setShowJoined(joinedArr);
     });
   }, [db, user.uid]);
-  console.log("showJoined", showJoined);
+
   return (
     <>
       <div className="group-list">
@@ -120,6 +122,7 @@ export const GroupList = () => {
           ) : (
             join.map((item, i) => (
               <div key={i} className="group-item-wrapper">
+                {console.log("item", item)}
                 <div className="group-img">
                   <img src="./images/akash.jpg" alt="man" />
                 </div>
@@ -129,7 +132,7 @@ export const GroupList = () => {
                   <span>{item.groupTag}</span>
                 </div>
                 <div className="group-btn">
-                  {cancle.includes(item.adminid) ? (
+                  {cancle.includes(item.adminid + item.currentUser) ? (
                     <Button
                       onClick={() =>
                         handleCancleJoin(
@@ -147,10 +150,7 @@ export const GroupList = () => {
                   ) : showJoined.includes(
                       item.adminid + user.uid || user.uid + item.adminid
                     ) ? (
-                    <Button
-                      onClick={() => handleJoin(item)}
-                      variant="contained"
-                    >
+                    <Button variant="contained">
                       <MdGroups /> Joined
                     </Button>
                   ) : (
