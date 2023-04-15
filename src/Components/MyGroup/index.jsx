@@ -61,6 +61,7 @@ const MyGroup = () => {
       groupname: data.groupname,
       adminname: data.adminname,
       username: data.username,
+      userProfile: data.userProfile,
     }).then(() => {
       remove(ref(db, "JoinGroupRequest/" + data.id));
     });
@@ -190,7 +191,7 @@ const MyGroup = () => {
                 member.map((item) => (
                   <div className="my-group-wrapper">
                     <div className="modal-img">
-                      <img src="./images/akash.jpg" alt="akash" />
+                      <img src={item.userProfile} alt="akash" />
                     </div>
                     <div className="my-group-name modalmane">
                       <h5>{item.username}</h5>
