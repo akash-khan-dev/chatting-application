@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import Badge from "@mui/material/Badge";
 
 const MyGroup = () => {
   const db = getDatabase();
@@ -159,6 +160,13 @@ const MyGroup = () => {
                     className="remove"
                   >
                     request
+                    <Badge
+                      badgeContent={joinGroup.length}
+                      color="success"
+                      sx={{
+                        margin: "3px 3px 10px 10px",
+                      }}
+                    ></Badge>
                   </Button>
                 </div>
               </div>
