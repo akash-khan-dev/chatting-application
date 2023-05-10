@@ -3,6 +3,7 @@ import "./style.css";
 import Grid from "@mui/material/Grid";
 import { Search } from "../../Components/Search";
 import MessageGroups from "../../Components/MessageGroups";
+import { Friends } from "../../Components/Friends";
 
 export const Message = () => {
   return (
@@ -12,6 +13,7 @@ export const Message = () => {
           <Grid item xs={4} className="message-item">
             <Search />
             <MessageGroups />
+            <Friends />
           </Grid>
           <Grid item xs={8} className="message-item">
             <h1>hello</h1>

@@ -11,6 +11,7 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import Button from "@mui/material/Button";
+import { Search } from "../Search";
 
 export const Friends = () => {
   const db = getDatabase();
@@ -67,6 +68,7 @@ export const Friends = () => {
   };
   return (
     <>
+      <Search />
       <div className="friends">
         <div className="friends-header">
           <h3>Friends</h3>
