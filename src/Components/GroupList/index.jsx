@@ -73,7 +73,6 @@ export const GroupList = () => {
     onValue(starCountRef, (snapshot) => {
       let cancleArr = [];
       snapshot.forEach((item) => {
-        console.log("val", item.val());
         cancleArr.push(item.val().adminid + item.val().userid);
       });
       seCancle(cancleArr);
@@ -122,7 +121,6 @@ export const GroupList = () => {
           ) : (
             join.map((item, i) => (
               <div key={i} className="group-item-wrapper">
-                {console.log("item", item)}
                 <div className="group-img">
                   <img src="./images/akash.jpg" alt="man" />
                 </div>

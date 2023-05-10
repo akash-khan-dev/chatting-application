@@ -120,6 +120,7 @@ const UserList = () => {
   // const [error, setError] = useState("");
   const handleSearch = (e) => {
     let search = [];
+    // let error = [];
 
     users.filter((item) => {
       if (item.username.toLowerCase().includes(e.target.value.toLowerCase())) {
@@ -128,7 +129,7 @@ const UserList = () => {
       }
     });
   };
-  console.log("search", search);
+  // console.log("error", error.length);
 
   return (
     <>

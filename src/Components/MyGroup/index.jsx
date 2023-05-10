@@ -51,7 +51,7 @@ const MyGroup = () => {
       setJoinGroup(joinArr);
     });
   };
-  console.log("JoinGroup", joinGroup);
+
   // group accept
   const handleGroupAccept = (data) => {
     set(push(ref(db, "groupmember")), {

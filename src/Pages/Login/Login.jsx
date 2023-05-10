@@ -20,11 +20,14 @@ import {
 } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import BeatLoader from "react-spinners/BeatLoader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LoginUser } from "../../Feature/UserSlice/UserSlice";
+import { getDatabase, ref, set } from "firebase/database";
 
 export const Login = () => {
   const auth = getAuth();
+  const db = getDatabase();
+  const reduxUser = useSelector((user) => user.logIn.login);
   const [showPass, setShowPass] = useState("password");
   const [loding, setLoding] = useState(false);
   const navigate = useNavigate();
@@ -41,8 +44,20 @@ export const Login = () => {
   // google authentication
   const handleGoogleAuth = () => {
     signInWithPopup(auth, Googleprovider).then(({ user }) => {
-      dispatch(LoginUser(user));
-      localStorage.setItem("users", JSON.stringify(user));
+      console.log("googleUser", user);
+      if (reduxUser.uid) {
+        set(ref(db, "users/" + reduxUser.uid), {
+          username: reduxUser.displayName,
+          email: reduxUser.email,
+        });
+        dispatch(LoginUser(user));
+        localStorage.setItem("users", JSON.stringify(user));
+      } else {
+        set(ref(db, "users/" + user.uid), {
+          username: user.displayName,
+          email: user.email,
+        });
+      }
     });
   };
   // facebook authentication
