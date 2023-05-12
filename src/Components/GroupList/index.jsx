@@ -73,7 +73,10 @@ export const GroupList = () => {
     onValue(starCountRef, (snapshot) => {
       let cancleArr = [];
       snapshot.forEach((item) => {
-        cancleArr.push(item.val().adminid + item.val().userid);
+        // console.log("item", item.val());
+        cancleArr.push(
+          item.val().adminid + item.val().userid + item.val().groupid
+        );
       });
       seCancle(cancleArr);
     });
@@ -130,7 +133,9 @@ export const GroupList = () => {
                   <span>{item.groupTag}</span>
                 </div>
                 <div className="group-btn">
-                  {cancle.includes(item.adminid + item.currentUser) ? (
+                  {cancle.includes(
+                    item.adminid + item.currentUser + item.id
+                  ) ? (
                     <Button
                       onClick={() =>
                         handleCancleJoin(
