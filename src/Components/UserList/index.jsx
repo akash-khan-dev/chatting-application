@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 
 import Button from "@mui/material/Button";
@@ -21,7 +21,8 @@ const UserList = () => {
   const [friendList, setFriendList] = useState([]);
   const [frnd, setFrnd] = useState([]);
   const [cancle, setCancle] = useState([]);
-  const [search, setSearch] = useState([]);
+  const [search, setSearch] = useState("");
+  const searchQueryRef = useRef(search);
 
   const user = useSelector((user) => user.logIn.login);
   //  show user
@@ -117,19 +118,24 @@ const UserList = () => {
     });
   }, [db]);
   // handle search
-  // const [error, setError] = useState("");
-  const handleSearch = (e) => {
-    let search = [];
-    // let error = [];
 
-    users.filter((item) => {
-      if (item.username.toLowerCase().includes(e.target.value.toLowerCase())) {
-        search.push(item);
-        setSearch(search);
-      }
-    });
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    searchQueryRef.current = e.target.value;
   };
-  // console.log("error", error.length);
+
+  // const handleSearch = (e) => {
+  //   const search = [];
+  //   users.filter((item) => {
+  //     if (item.username.toLowerCase().includes(e.target.value.toLowerCase())) {
+  //       search.push(item);
+  //     } else {
+  //       search.push("not found");
+  //     }
+  //   });
+  //   setSearch(search);
+  // };
+  // console.log(search);
 
   return (
     <>
@@ -139,133 +145,73 @@ const UserList = () => {
           <h3>User List</h3>
         </div>
         <div className="user-list-container">
-          {search.length > 0
-            ? search.map((item, i) => (
-                <div key={i} className="user-list-wrapper">
-                  <div className="user-list-img">
-                    <img
-                      src={item.profile || "./images/man.jpg"}
-                      onError={(e) => {
-                        e.target.src = "./images/man.jpg";
-                      }}
-                      alt="man"
-                    />
-                  </div>
-                  <div className="user-list-name">
-                    <h5>{item.username}</h5>
-                  </div>
-                  {frnd.includes(item.id + user.uid) ||
-                  frnd.includes(user.uid + item.id) ? (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      className="user-list-btn"
-                    >
-                      friend
-                    </Button>
-                  ) : friendList.includes(item.id + user.uid) ||
-                    friendList.includes(user.uid + item.id) ? (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() =>
-                        handleRevome(
-                          cancle.find(
-                            (req) =>
-                              req.reciverid === item.id &&
-                              req.senderid === user.uid
-                          ).id
-                        )
-                      }
-                      className="user-list-btn"
-                    >
-                      cancle
-                    </Button>
-                  ) : showBLock.includes(item.id + user.uid) ||
-                    showBLock.includes(user.uid + item.id) ? (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      disabled
-                      className="user-list-btn"
-                    >
-                      Block
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => handleFriendRequest(item)}
-                      className="user-list-btn"
-                    >
-                      add
-                    </Button>
-                  )}
+          {users
+            .filter((item) =>
+              item.username.toLowerCase().includes(searchQueryRef.current)
+            )
+            .map((item, i) => (
+              <div key={i} className="user-list-wrapper">
+                <div className="user-list-img">
+                  <img
+                    src={item.profile || "./images/man.jpg"}
+                    onError={(e) => {
+                      e.target.src = "./images/man.jpg";
+                    }}
+                    alt="man"
+                  />
                 </div>
-              ))
-            : users.map((item, i) => (
-                <div key={i} className="user-list-wrapper">
-                  <div className="user-list-img">
-                    <img
-                      src={item.profile || "./images/man.jpg"}
-                      onError={(e) => {
-                        e.target.src = "./images/man.jpg";
-                      }}
-                      alt="man"
-                    />
-                  </div>
-                  <div className="user-list-name">
-                    <h5>{item.username}</h5>
-                  </div>
-                  {frnd.includes(item.id + user.uid) ||
-                  frnd.includes(user.uid + item.id) ? (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      className="user-list-btn"
-                    >
-                      friend
-                    </Button>
-                  ) : friendList.includes(item.id + user.uid) ||
-                    friendList.includes(user.uid + item.id) ? (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() =>
-                        handleRevome(
-                          cancle.find(
-                            (req) =>
-                              req.reciverid === item.id &&
-                              req.senderid === user.uid
-                          ).id
-                        )
-                      }
-                      className="user-list-btn"
-                    >
-                      cancle
-                    </Button>
-                  ) : showBLock.includes(item.id + user.uid) ||
-                    showBLock.includes(user.uid + item.id) ? (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      disabled
-                      className="user-list-btn"
-                    >
-                      Block
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => handleFriendRequest(item)}
-                      className="user-list-btn"
-                    >
-                      add
-                    </Button>
-                  )}
+                <div className="user-list-name">
+                  <h5>{item.username}</h5>
                 </div>
-              ))}
+                {frnd.includes(item.id + user.uid) ||
+                frnd.includes(user.uid + item.id) ? (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    className="user-list-btn"
+                  >
+                    friend
+                  </Button>
+                ) : friendList.includes(item.id + user.uid) ||
+                  friendList.includes(user.uid + item.id) ? (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() =>
+                      handleRevome(
+                        cancle.find(
+                          (req) =>
+                            req.reciverid === item.id &&
+                            req.senderid === user.uid
+                        ).id
+                      )
+                    }
+                    className="user-list-btn"
+                  >
+                    cancle
+                  </Button>
+                ) : showBLock.includes(item.id + user.uid) ||
+                  showBLock.includes(user.uid + item.id) ? (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    disabled
+                    className="user-list-btn"
+                  >
+                    Block
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleFriendRequest(item)}
+                    className="user-list-btn"
+                  >
+                    add
+                  </Button>
+                )}
+              </div>
+            ))}
         </div>
       </div>
     </>

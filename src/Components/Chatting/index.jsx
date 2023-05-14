@@ -22,6 +22,20 @@ export const Chatting = () => {
             <BsThreeDotsVertical />
           </div>
         </div>
+        <div className="left-message">
+          <div className="left-text">
+            <h6>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi
+            </h6>
+          </div>
+          <p>Today, 2:01pm</p>
+        </div>
+        <div className="left-message">
+          <div className="left-text">
+            <h6>Lorem ipsum dolor</h6>
+          </div>
+          <p>Today, 2:01pm</p>
+        </div>
       </div>
     </>
   );
