@@ -7,8 +7,15 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
+.message {
+  overflow-y: auto;
+  height: 80vh;
+  padding: 0px 50px 50px 50px;
+  box-sizing: border-box;
+}
 .active-user-status {
   display: flex;
   align-items: center;
@@ -97,7 +104,7 @@
 .left-text::after {
   position: absolute;
   content: "";
-  left: -9px;
+  left: -8px;
   bottom: 0px;
   width: 0;
   height: 0;
@@ -114,6 +121,59 @@
 }
 
 .left-message p {
+  font-family: var(--poppins);
+  font-weight: 400;
+  font-size: 10px;
+  color: rgb(139, 138, 138);
+}
+
+.left-img img {
+  border-radius: 10px;
+  width: 350px;
+  object-fit: cover;
+}
+.right-img img {
+  border-radius: 10px;
+  width: 350px;
+  object-fit: cover;
+}
+/* right part css */
+.right-message {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.right-text {
+  padding: 10px 25px;
+  text-align: start;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  display: inline-block;
+  max-width: 400px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.right-text::after {
+  position: absolute;
+  content: "";
+  right: -8px;
+  bottom: 0px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 9px 18px 9px;
+  border-color: transparent transparent var(--primary-color) transparent;
+}
+
+.right-text h6 {
+  font-family: var(--poppins);
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--white-color);
+}
+
+.right-message p {
   font-family: var(--poppins);
   font-weight: 400;
   font-size: 10px;

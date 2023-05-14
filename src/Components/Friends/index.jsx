@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import Alert from "@mui/material/Alert";
 import {
@@ -66,6 +66,13 @@ export const Friends = () => {
   const handleUnfriend = (data) => {
     remove(ref(db, "Friends/" + data.id));
   };
+
+  // search function
+  // const [search,setSearch] = useState('')
+  // const searchQueryRef = useRef(search)
+  // const handleSearch = (e) => {
+  //   setSearch(e.target.value)
+  // }
   return (
     <>
       <Search />
