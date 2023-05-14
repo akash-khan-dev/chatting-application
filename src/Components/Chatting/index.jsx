@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import ModalImage from "react-modal-image";
 
 export const Chatting = () => {
   return (
@@ -48,9 +49,10 @@ export const Chatting = () => {
           {/* left message start */}
           <div className="left-message">
             <div className="left-img">
-              <picture>
-                <img src="./images/sun.jpg" alt="chat" />
-              </picture>
+              <ModalImage
+                small={"./images/sun.jpg"}
+                large={"./images/sun.jpg"}
+              />
             </div>
             <p>Today, 2:01pm</p>
           </div>
@@ -58,9 +60,11 @@ export const Chatting = () => {
           {/* right message start */}
           <div className="right-message">
             <div className="right-img">
-              <picture>
-                <img src="./images/chatt.jpg" alt="chat" />
-              </picture>
+              <ModalImage
+                className="modal"
+                small={"./images/chatt.jpg"}
+                large={"./images/chatt.jpg"}
+              />
             </div>
             <p>Today, 2:01pm</p>
           </div>
