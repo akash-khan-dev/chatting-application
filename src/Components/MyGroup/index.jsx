@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { Button } from "@mui/material";
 import Alert from "@mui/material/Alert";
@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Badge from "@mui/material/Badge";
+import { Search } from "../Search";
 
 const MyGroup = () => {
   const db = getDatabase();
@@ -87,8 +88,16 @@ const MyGroup = () => {
     });
   };
 
+  //myGroup search
+  const [search, setSearch] = useState("");
+  const myGroupQueryRef = useRef(search);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    myGroupQueryRef.current = e.target.value;
+  };
   return (
     <>
+      <Search handleSearch={handleSearch} />
       <div className="my-group">
         <div className="my-group-header">
           <h5>My Groups</h5>
@@ -135,43 +144,47 @@ const MyGroup = () => {
               ))
             )
           ) : (
-            myGroup.map((item, i) => (
-              <div key={i} className="my-group-wrapper">
-                <div className="my-group-img">
-                  <img src="./images/akash.jpg" alt="akash" />
+            myGroup
+              .filter((item) =>
+                item.groupname.toLowerCase().includes(myGroupQueryRef.current)
+              )
+              .map((item, i) => (
+                <div key={i} className="my-group-wrapper">
+                  <div className="my-group-img">
+                    <img src="./images/akash.jpg" alt="akash" />
+                  </div>
+                  <div className="my-group-name">
+                    <h5>{item.groupname}</h5>
+                    <p>Admin:{item.adminname}</p>
+                    <span>{item.groupTag}</span>
+                  </div>
+                  <div className="friend-request-btn">
+                    <Button
+                      onClick={() => handleOpen(item)}
+                      variant="contained"
+                      size="small"
+                      className="accept"
+                    >
+                      Info
+                    </Button>
+                    <Button
+                      onClick={() => handleShowRequest(item)}
+                      variant="contained"
+                      size="small"
+                      className="remove"
+                    >
+                      request
+                      <Badge
+                        badgeContent={joinGroup.length}
+                        color="success"
+                        sx={{
+                          margin: "3px 3px 10px 10px",
+                        }}
+                      ></Badge>
+                    </Button>
+                  </div>
                 </div>
-                <div className="my-group-name">
-                  <h5>{item.groupname}</h5>
-                  <p>Admin:{item.adminname}</p>
-                  <span>{item.groupTag}</span>
-                </div>
-                <div className="friend-request-btn">
-                  <Button
-                    onClick={() => handleOpen(item)}
-                    variant="contained"
-                    size="small"
-                    className="accept"
-                  >
-                    Info
-                  </Button>
-                  <Button
-                    onClick={() => handleShowRequest(item)}
-                    variant="contained"
-                    size="small"
-                    className="remove"
-                  >
-                    request
-                    <Badge
-                      badgeContent={joinGroup.length}
-                      color="success"
-                      sx={{
-                        margin: "3px 3px 10px 10px",
-                      }}
-                    ></Badge>
-                  </Button>
-                </div>
-              </div>
-            ))
+              ))
           )}
         </div>
         <Modal
