@@ -14,7 +14,6 @@ export const Home = () => {
     <div>
       <Grid container className="home-pages">
         <Grid item xs={4} className="home-item">
-          <Search />
           <GroupList />
           <FriendRequest />
         </Grid>

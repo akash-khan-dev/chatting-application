@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -18,6 +18,7 @@ import {
 } from "firebase/database";
 import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
+import { Search } from "../Search";
 
 export const GroupList = () => {
   const db = getDatabase();
@@ -111,8 +112,16 @@ export const GroupList = () => {
     });
   }, [db, user.uid]);
 
+  // group name search fundamental
+  const [search, setSearch] = useState("");
+  const groupQuerySearch = useRef(search);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    groupQuerySearch.current = e.target.value;
+  };
   return (
     <>
+      <Search handleSearch={handleSearch} />
       <div className="group-list">
         <div className="group-header">
           <h3>Groups List</h3>
@@ -122,51 +131,55 @@ export const GroupList = () => {
           {join.length === 0 ? (
             <Alert severity="error">no more groups yet</Alert>
           ) : (
-            join.map((item, i) => (
-              <div key={i} className="group-item-wrapper">
-                <div className="group-img">
-                  <img src="./images/akash.jpg" alt="man" />
-                </div>
-                <div className="group-name">
-                  <h5>{item.groupname}</h5>
-                  <p>Admin:{item.adminname}</p>
-                  <span>{item.groupTag}</span>
-                </div>
-                <div className="group-btn">
-                  {cancle.includes(
-                    item.adminid + item.currentUser + item.id
-                  ) ? (
-                    <Button
-                      onClick={() =>
-                        handleCancleJoin(
-                          removeCancle.find(
-                            (id) =>
-                              id.groupid === item.id &&
-                              id.adminid === item.adminid
-                          ).id
-                        )
-                      }
-                      variant="contained"
-                    >
-                      cancle
-                    </Button>
-                  ) : showJoined.includes(
-                      item.adminid + user.uid || user.uid + item.adminid
+            join
+              .filter((item) =>
+                item.groupname.toLowerCase().includes(groupQuerySearch.current)
+              )
+              .map((item, i) => (
+                <div key={i} className="group-item-wrapper">
+                  <div className="group-img">
+                    <img src="./images/akash.jpg" alt="man" />
+                  </div>
+                  <div className="group-name">
+                    <h5>{item.groupname}</h5>
+                    <p>Admin:{item.adminname}</p>
+                    <span>{item.groupTag}</span>
+                  </div>
+                  <div className="group-btn">
+                    {cancle.includes(
+                      item.adminid + item.currentUser + item.id
                     ) ? (
-                    <Button variant="contained">
-                      <MdGroups /> Joined
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => handleJoin(item)}
-                      variant="contained"
-                    >
-                      join gruop
-                    </Button>
-                  )}
+                      <Button
+                        onClick={() =>
+                          handleCancleJoin(
+                            removeCancle.find(
+                              (id) =>
+                                id.groupid === item.id &&
+                                id.adminid === item.adminid
+                            ).id
+                          )
+                        }
+                        variant="contained"
+                      >
+                        cancle
+                      </Button>
+                    ) : showJoined.includes(
+                        item.adminid + user.uid || user.uid + item.adminid
+                      ) ? (
+                      <Button variant="contained">
+                        <MdGroups /> Joined
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => handleJoin(item)}
+                        variant="contained"
+                      >
+                        join gruop
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
           )}
         </div>
         <div className="div">
