@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import "./style.css";
@@ -11,6 +11,7 @@ import {
   push,
 } from "firebase/database";
 import { useSelector } from "react-redux";
+import { Search } from "../Search";
 
 export const FriendRequest = () => {
   const user = useSelector((user) => user.logIn.login);
@@ -43,8 +44,17 @@ export const FriendRequest = () => {
     remove(ref(db, "friendsReuquest/" + data.id));
   };
 
+  // friends request search functionality
+
+  const [search, setSearch] = useState("");
+  const friendRequestQueryRef = useRef(search);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    friendRequestQueryRef.current = e.target.value;
+  };
   return (
     <>
+      <Search handleSearch={handleSearch} />
       <div className="friend-request">
         <div className="friend-request-header">
           <h5>Friend Request</h5>
@@ -53,40 +63,46 @@ export const FriendRequest = () => {
           {friends.length === 0 ? (
             <Alert severity="error">no Friends yet!</Alert>
           ) : (
-            friends.map((item, i) => (
-              <div key={i} className="friend-request-wrapper">
-                <div className="friend-request-img">
-                  <img
-                    src={item.currentProfile || "./images/man.jpg"}
-                    onError={(e) => {
-                      e.target.src = "./images/man.jpg";
-                    }}
-                    alt="man"
-                  />
+            friends
+              .filter((item) =>
+                item.sendername
+                  .toLowerCase()
+                  .includes(friendRequestQueryRef.current)
+              )
+              .map((item, i) => (
+                <div key={i} className="friend-request-wrapper">
+                  <div className="friend-request-img">
+                    <img
+                      src={item.currentProfile || "./images/man.jpg"}
+                      onError={(e) => {
+                        e.target.src = "./images/man.jpg";
+                      }}
+                      alt="man"
+                    />
+                  </div>
+                  <div className="friend-request-name">
+                    <h5>{item.sendername}</h5>
+                  </div>
+                  <div className="friend-request-btn">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => handleAcceptRequest(item)}
+                      className="accept"
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => handleRemove(item)}
+                      className="remove"
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </div>
-                <div className="friend-request-name">
-                  <h5>{item.sendername}</h5>
-                </div>
-                <div className="friend-request-btn">
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleAcceptRequest(item)}
-                    className="accept"
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleRemove(item)}
-                    className="remove"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              </div>
-            ))
+              ))
           )}
         </div>
       </div>
