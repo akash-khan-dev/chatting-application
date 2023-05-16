@@ -2,6 +2,22 @@ import React from "react";
 import "./style.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ModalImage from "react-modal-image";
+import { FaTelegramPlane } from "react-icons/fa";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import SaveIcon from "@mui/icons-material/Save";
+import PrintIcon from "@mui/icons-material/Print";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import { Button } from "@mui/material";
+
+const actions = [
+  { icon: <CollectionsBookmarkIcon />, name: "Gallery" },
+  { icon: <SaveIcon />, name: "Save" },
+  { icon: <PrintIcon />, name: "Print" },
+  { icon: <PhotoCameraIcon />, name: "Camera" },
+];
 
 export const Chatting = () => {
   return (
@@ -69,6 +85,47 @@ export const Chatting = () => {
             <p>Today, 2:01pm</p>
           </div>
           {/* right message end */}
+          {/* left message start */}
+          <div className="left-message">
+            <audio controls></audio>
+            <p>Today, 2:01pm</p>
+          </div>
+          {/* left message end */}
+
+          {/* right message start */}
+          <div className="right-message">
+            <audio controls></audio>
+            <p>Today, 2:01pm</p>
+          </div>
+          {/* right message end */}
+
+          {/* left message start */}
+          <div className="left-message">
+            <video controls></video>
+            <p>Today, 2:01pm</p>
+          </div>
+          {/* left message end */}
+        </div>
+        <div className="write-box">
+          <div className="inputs-box">
+            <input type="text" />
+            <SpeedDial
+              ariaLabel="SpeedDial basic example"
+              sx={{ position: "absolute", bottom: 23, right: 295 }}
+              icon={<SpeedDialIcon />}
+            >
+              {actions.map((action) => (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                />
+              ))}
+            </SpeedDial>
+          </div>
+          <Button className="send-button" variant="contained">
+            <FaTelegramPlane />
+          </Button>
         </div>
       </div>
     </>

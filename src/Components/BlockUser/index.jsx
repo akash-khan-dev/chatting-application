@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import {
   getDatabase,
@@ -10,6 +10,7 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { Alert, Button } from "@mui/material";
+import { Search } from "../Search";
 
 const BlockUser = () => {
   const db = getDatabase();
@@ -66,9 +67,16 @@ const BlockUser = () => {
       remove(ref(db, "block/" + item.id));
     });
   };
-
+  // block search functionality
+  // const [search, setSearch] = useState("");
+  // const blockSearchQueryRef = useRef(search);
+  // const handleSearch = (e) => {
+  //   setSearch(e.target.value);
+  //   blockSearchQueryRef.current = e.target.value;
+  // };
   return (
     <>
+      <Search />
       <div className="block-user">
         <div className="block-user-header">
           <h5>Blocked User</h5>
