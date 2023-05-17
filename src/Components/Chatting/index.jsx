@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ModalImage from "react-modal-image";
@@ -8,18 +8,26 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import SaveIcon from "@mui/icons-material/Save";
-import PrintIcon from "@mui/icons-material/Print";
+import ShutterSpeedIcon from "@mui/icons-material/ShutterSpeed";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { Button } from "@mui/material";
+// react html camera photos
+import Camera from "react-html5-camera-photo";
+import "react-html5-camera-photo/build/css/index.css";
 
 const actions = [
   { icon: <CollectionsBookmarkIcon />, name: "Gallery" },
   { icon: <SaveIcon />, name: "Save" },
-  { icon: <PrintIcon />, name: "Print" },
+  { icon: <ShutterSpeedIcon />, name: "....." },
   { icon: <PhotoCameraIcon />, name: "Camera" },
 ];
 
 export const Chatting = () => {
+  const [showCamera, setShowCamera] = useState(false);
+  function handleTakePhoto(dataUri) {
+    // Do stuff with the photo...
+    console.log("takePhoto");
+  }
   return (
     <>
       <div className="chatting-box">
@@ -39,6 +47,16 @@ export const Chatting = () => {
             <BsThreeDotsVertical />
           </div>
         </div>
+        {showCamera && (
+          <div className="open-camera">
+            <Camera
+              onTakePhoto={(dataUri) => {
+                handleTakePhoto(dataUri);
+              }}
+            />
+          </div>
+        )}
+
         <div className="message">
           {/* left message start */}
           <div className="left-message">
@@ -111,18 +129,22 @@ export const Chatting = () => {
             <input type="text" />
             <SpeedDial
               ariaLabel="SpeedDial basic example"
-              sx={{ position: "absolute", bottom: 23, right: 295 }}
+              sx={{ position: "absolute", bottom: 23, right: 288 }}
               icon={<SpeedDialIcon />}
             >
               {actions.map((action) => (
                 <SpeedDialAction
                   key={action.name}
+                  onClick={() =>
+                    action.name === "Camera" ? setShowCamera(true) : false
+                  }
                   icon={action.icon}
                   tooltipTitle={action.name}
                 />
               ))}
             </SpeedDial>
           </div>
+
           <Button className="send-button" variant="contained">
             <FaTelegramPlane />
           </Button>

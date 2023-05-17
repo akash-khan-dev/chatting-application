@@ -16,6 +16,7 @@
   padding: 0px 50px 50px 50px;
   box-sizing: border-box;
 }
+
 .active-user-status {
   display: flex;
   align-items: center;
