@@ -10,7 +10,7 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import SaveIcon from "@mui/icons-material/Save";
-import ShutterSpeedIcon from "@mui/icons-material/ShutterSpeed";
+import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { Button } from "@mui/material";
 // react html camera photos
@@ -19,7 +19,7 @@ import "react-html5-camera-photo/build/css/index.css";
 
 const actions = [
   { icon: <SaveIcon />, name: "Save" },
-  { icon: <ShutterSpeedIcon />, name: "....." },
+  { icon: <KeyboardVoiceIcon />, name: "Voice" },
   { icon: <CollectionsIcon />, name: "Gallery" },
   { icon: <PhotoCameraIcon />, name: "Camera" },
 ];
@@ -28,11 +28,6 @@ export const Chatting = () => {
   const [showCamera, setShowCamera] = useState(false);
   const chooseFile = useRef();
   const showMorefundamantal = (name) => {
-    // action.name === "Camera"
-    //   ? setShowCamera(true)
-    //   : false || action.name === "Gallery"
-    //   ? chooseFile.current.click()
-    //   : null;
     if (name === "Camera") {
       setShowCamera(true);
     } else if (name === "Gallery") {
