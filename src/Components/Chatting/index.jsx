@@ -3,6 +3,8 @@ import "./style.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ModalImage from "react-modal-image";
 import { FaTelegramPlane } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
+
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -49,6 +51,7 @@ export const Chatting = () => {
         </div>
         {showCamera && (
           <div className="open-camera">
+            <RxCross2 onClick={() => setShowCamera(false)} />
             <Camera
               onTakePhoto={(dataUri) => {
                 handleTakePhoto(dataUri);

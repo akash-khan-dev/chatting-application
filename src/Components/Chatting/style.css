@@ -16,7 +16,17 @@
   padding: 0px 50px 50px 50px;
   box-sizing: border-box;
 }
-
+.open-camera {
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  text-align: right;
+}
+.open-camera svg {
+  cursor: pointer;
+}
 .active-user-status {
   display: flex;
   align-items: center;
