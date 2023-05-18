@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./style.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ModalImage from "react-modal-image";
@@ -8,7 +8,7 @@ import { RxCross2 } from "react-icons/rx";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
-import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import CollectionsIcon from "@mui/icons-material/Collections";
 import SaveIcon from "@mui/icons-material/Save";
 import ShutterSpeedIcon from "@mui/icons-material/ShutterSpeed";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
@@ -18,17 +18,31 @@ import Camera from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 
 const actions = [
-  { icon: <CollectionsBookmarkIcon />, name: "Gallery" },
   { icon: <SaveIcon />, name: "Save" },
   { icon: <ShutterSpeedIcon />, name: "....." },
+  { icon: <CollectionsIcon />, name: "Gallery" },
   { icon: <PhotoCameraIcon />, name: "Camera" },
 ];
 
 export const Chatting = () => {
   const [showCamera, setShowCamera] = useState(false);
+  const chooseFile = useRef();
+  const showMorefundamantal = (name) => {
+    // action.name === "Camera"
+    //   ? setShowCamera(true)
+    //   : false || action.name === "Gallery"
+    //   ? chooseFile.current.click()
+    //   : null;
+    if (name === "Camera") {
+      setShowCamera(true);
+    } else if (name === "Gallery") {
+      chooseFile.current.click();
+      // console.log("gallery");
+    }
+  };
   function handleTakePhoto(dataUri) {
     // Do stuff with the photo...
-    console.log("takePhoto");
+    console.log("dataUri");
   }
   return (
     <>
@@ -138,15 +152,14 @@ export const Chatting = () => {
               {actions.map((action) => (
                 <SpeedDialAction
                   key={action.name}
-                  onClick={() =>
-                    action.name === "Camera" ? setShowCamera(true) : false
-                  }
+                  onClick={() => showMorefundamantal(action.name)}
                   icon={action.icon}
                   tooltipTitle={action.name}
                 />
               ))}
             </SpeedDial>
           </div>
+          <input hidden type="file" ref={chooseFile} />
 
           <Button className="send-button" variant="contained">
             <FaTelegramPlane />
