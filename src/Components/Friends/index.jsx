@@ -24,10 +24,8 @@ export const Friends = () => {
       let friensArr = [];
       snapshot.forEach((friens) => {
         if (
-          (user.uid === friens.val().senderid &&
-            user.uid !== friens.val().reciverid) ||
-          (user.uid === friens.val().reciverid &&
-            user.uid !== friens.val().senderid)
+          user.uid === friens.val().senderid ||
+          user.uid === friens.val().reciverid
         ) {
           friensArr.push({ ...friens.val(), id: friens.key });
         }
