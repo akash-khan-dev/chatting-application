@@ -9,11 +9,13 @@ import {
   push,
   remove,
 } from "firebase/database";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import { Search } from "../Search";
+import { ActiveSingle } from "../../Feature/UserSlice/ActiveSingleSlice";
 
 export const Friends = () => {
+  const dispath = useDispatch();
   const db = getDatabase();
   const user = useSelector((user) => user.logIn.login);
   // all friends get
@@ -71,6 +73,26 @@ export const Friends = () => {
     setSearch(e.target.value);
     freandSearchQueryRef.current = e.target.value;
   };
+  // handleSingleChat
+  const handleSingleChat = (data) => {
+    if (user.uid === data.reciverid) {
+      dispath(
+        ActiveSingle({
+          status: "single",
+          id: data.senderid,
+          name: data.sendername,
+        })
+      );
+    } else {
+      dispath(
+        ActiveSingle({
+          status: "single",
+          id: data.reciverid,
+          name: data.recivername,
+        })
+      );
+    }
+  };
   return (
     <>
       <Search handleSearch={handleSearch} />
@@ -91,7 +113,11 @@ export const Friends = () => {
                     .includes(freandSearchQueryRef.current)
               )
               .map((item, i) => (
-                <div key={i} className="friends-wrapper">
+                <div
+                  key={i}
+                  className="friends-wrapper"
+                  onClick={() => handleSingleChat(item)}
+                >
                   <div className="friends-img">
                     {user.uid === item.reciverid ? (
                       <img
