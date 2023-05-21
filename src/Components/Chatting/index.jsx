@@ -17,6 +17,7 @@ import { Button } from "@mui/material";
 import Camera from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 import { useSelector } from "react-redux";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 
 const actions = [
   { icon: <SaveIcon />, name: "Save" },
@@ -26,7 +27,10 @@ const actions = [
 ];
 
 export const Chatting = () => {
-  const active = useSelector((user) => user.active.active);
+  const db = getDatabase();
+  const [msg, setMsg] = useState("");
+  const user = useSelector((user) => user.logIn.login);
+  const activeChangeName = useSelector((user) => user.active.active);
   const [showCamera, setShowCamera] = useState(false);
   const chooseFile = useRef();
   const showMorefundamantal = (name) => {
@@ -37,6 +41,23 @@ export const Chatting = () => {
       // console.log("gallery");
     }
   };
+
+  // handleSendMessage
+  const handleSendMessage = () => {
+    if (activeChangeName.status === "single") {
+      set(push(ref(db, "singleMsg")), {
+        whosendname: user.displayName,
+        whosendid: user.uid,
+        whorecivename: activeChangeName.name,
+        whorecivenameid: activeChangeName.id,
+        msg: msg,
+        date: `${new Date().getFullYear()}-${
+          new Date().getMonth() + 1
+        }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
+      });
+    }
+  };
+
   function handleTakePhoto(dataUri) {
     // Do stuff with the photo...
     console.log("dataUri");
@@ -53,7 +74,7 @@ export const Chatting = () => {
             </div>
           </div>
           <div className="active-user-name">
-            <h1>{active.name}</h1>
+            <h1>{activeChangeName.name}</h1>
             <p>Online</p>
           </div>
           <div className="active-user-info">
@@ -140,7 +161,7 @@ export const Chatting = () => {
         </div>
         <div className="write-box">
           <div className="inputs-box">
-            <input type="text" />
+            <input onChange={(e) => setMsg(e.target.value)} type="text" />
             <SpeedDial
               ariaLabel="SpeedDial basic example"
               sx={{ position: "absolute", bottom: 23, right: 288 }}
@@ -158,7 +179,11 @@ export const Chatting = () => {
           </div>
           <input hidden type="file" ref={chooseFile} />
 
-          <Button className="send-button" variant="contained">
+          <Button
+            onClick={handleSendMessage}
+            className="send-button"
+            variant="contained"
+          >
             <FaTelegramPlane />
           </Button>
         </div>
