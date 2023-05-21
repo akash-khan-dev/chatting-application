@@ -16,6 +16,7 @@ import { Button } from "@mui/material";
 // react html camera photos
 import Camera from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
+import { useSelector } from "react-redux";
 
 const actions = [
   { icon: <SaveIcon />, name: "Save" },
@@ -25,6 +26,7 @@ const actions = [
 ];
 
 export const Chatting = () => {
+  const active = useSelector((user) => user.active.active);
   const [showCamera, setShowCamera] = useState(false);
   const chooseFile = useRef();
   const showMorefundamantal = (name) => {
@@ -51,7 +53,7 @@ export const Chatting = () => {
             </div>
           </div>
           <div className="active-user-name">
-            <h1>akash</h1>
+            <h1>{active.name}</h1>
             <p>Online</p>
           </div>
           <div className="active-user-info">

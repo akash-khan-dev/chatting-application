@@ -83,9 +83,25 @@ export const Friends = () => {
           name: data.sendername,
         })
       );
+      localStorage.setItem(
+        "active",
+        JSON.stringify({
+          status: "single",
+          id: data.senderid,
+          name: data.sendername,
+        })
+      );
     } else {
       dispath(
         ActiveSingle({
+          status: "single",
+          id: data.reciverid,
+          name: data.recivername,
+        })
+      );
+      localStorage.setItem(
+        "active",
+        JSON.stringify({
           status: "single",
           id: data.reciverid,
           name: data.recivername,

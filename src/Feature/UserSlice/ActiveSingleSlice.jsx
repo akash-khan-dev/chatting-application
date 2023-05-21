@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 export const ActiveSingleSlice = createSlice({
   name: "single",
   initialState: {
-    active: null,
+    active: localStorage.getItem("active")
+      ? JSON.parse(localStorage.getItem("active"))
+      : null,
   },
   reducers: {
     ActiveSingle: (state, action) => {
