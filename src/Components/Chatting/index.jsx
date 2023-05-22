@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ModalImage from "react-modal-image";
@@ -29,6 +29,7 @@ const actions = [
 export const Chatting = () => {
   const db = getDatabase();
   const [msg, setMsg] = useState("");
+  const [allMsg, setAllMsg] = useState([]);
   const user = useSelector((user) => user.logIn.login);
   const activeChangeName = useSelector((user) => user.active.active);
   const [showCamera, setShowCamera] = useState(false);
@@ -49,15 +50,33 @@ export const Chatting = () => {
         whosendname: user.displayName,
         whosendid: user.uid,
         whorecivename: activeChangeName.name,
-        whorecivenameid: activeChangeName.id,
+        whoreciveid: activeChangeName.id,
         msg: msg,
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
         }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
       });
+    } else {
+      console.log("aita group message er jonno");
     }
   };
-
+  // get a message in database
+  useEffect(() => {
+    onValue(ref(db, "singleMsg"), (snapshot) => {
+      let singleMsgArr = [];
+      snapshot.forEach((item) => {
+        if (
+          (user.uid === item.val().whosendid &&
+            item.val().whoreciveid === activeChangeName.id) ||
+          (user.uid === item.val().whoreciveid &&
+            item.val().whosendid === activeChangeName.id)
+        ) {
+          singleMsgArr.push(item.val());
+        }
+        setAllMsg(singleMsgArr);
+      });
+    });
+  }, []);
   function handleTakePhoto(dataUri) {
     // Do stuff with the photo...
     console.log("dataUri");
@@ -93,8 +112,37 @@ export const Chatting = () => {
         )}
 
         <div className="message">
+          {activeChangeName.status === "single"
+            ? allMsg.map((item) =>
+                item.whosendid === user.uid ? (
+                  item.msg ? (
+                    <>
+                      <div className="right-message">
+                        <div className="right-text">
+                          <h6>{item.msg}</h6>
+                        </div>
+                        <p>Today, 2:01pm</p>
+                      </div>
+                    </>
+                  ) : (
+                    "images"
+                  )
+                ) : item.msg ? (
+                  <>
+                    <div className="left-message">
+                      <div className="left-text">
+                        <h6>{item.msg}</h6>
+                      </div>
+                      <p>Today, 2:01pm</p>
+                    </div>
+                  </>
+                ) : (
+                  "images"
+                )
+              )
+            : "group"}
           {/* left message start */}
-          <div className="left-message">
+          {/* <div className="left-message">
             <div className="left-text">
               <h6>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -102,10 +150,10 @@ export const Chatting = () => {
               </h6>
             </div>
             <p>Today, 2:01pm</p>
-          </div>
+          </div> */}
           {/* left message end */}
           {/* right part start */}
-          <div className="right-message">
+          {/* <div className="right-message">
             <div className="right-text">
               <h6>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -113,10 +161,10 @@ export const Chatting = () => {
               </h6>
             </div>
             <p>Today, 2:01pm</p>
-          </div>
+          </div> */}
           {/* right part end */}
           {/* left message start */}
-          <div className="left-message">
+          {/* <div className="left-message">
             <div className="left-img">
               <ModalImage
                 small={"./images/sun.jpg"}
@@ -124,10 +172,10 @@ export const Chatting = () => {
               />
             </div>
             <p>Today, 2:01pm</p>
-          </div>
+          </div> */}
           {/* left message end */}
           {/* right message start */}
-          <div className="right-message">
+          {/* <div className="right-message">
             <div className="right-img">
               <ModalImage
                 className="modal"
@@ -136,27 +184,27 @@ export const Chatting = () => {
               />
             </div>
             <p>Today, 2:01pm</p>
-          </div>
+          </div> */}
           {/* right message end */}
           {/* left message start */}
-          <div className="left-message">
+          {/* <div className="left-message">
             <audio controls></audio>
             <p>Today, 2:01pm</p>
-          </div>
+          </div> */}
           {/* left message end */}
 
           {/* right message start */}
-          <div className="right-message">
+          {/* <div className="right-message">
             <audio controls></audio>
             <p>Today, 2:01pm</p>
-          </div>
+          </div> */}
           {/* right message end */}
 
           {/* left message start */}
-          <div className="left-message">
+          {/* <div className="left-message">
             <video controls></video>
             <p>Today, 2:01pm</p>
-          </div>
+          </div> */}
           {/* left message end */}
         </div>
         <div className="write-box">
