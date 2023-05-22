@@ -18,6 +18,7 @@ import Camera from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 import { useSelector } from "react-redux";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import moment from "moment/moment";
 
 const actions = [
   { icon: <SaveIcon />, name: "Save" },
@@ -76,7 +77,7 @@ export const Chatting = () => {
         setAllMsg(singleMsgArr);
       });
     });
-  }, []);
+  }, [activeChangeName.id]);
   function handleTakePhoto(dataUri) {
     // Do stuff with the photo...
     console.log("dataUri");
@@ -121,7 +122,7 @@ export const Chatting = () => {
                         <div className="right-text">
                           <h6>{item.msg}</h6>
                         </div>
-                        <p>Today, 2:01pm</p>
+                        <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                       </div>
                     </>
                   ) : (
@@ -133,7 +134,7 @@ export const Chatting = () => {
                       <div className="left-text">
                         <h6>{item.msg}</h6>
                       </div>
-                      <p>Today, 2:01pm</p>
+                      <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                     </div>
                   </>
                 ) : (
@@ -141,28 +142,7 @@ export const Chatting = () => {
                 )
               )
             : "group"}
-          {/* left message start */}
-          {/* <div className="left-message">
-            <div className="left-text">
-              <h6>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Commodi
-              </h6>
-            </div>
-            <p>Today, 2:01pm</p>
-          </div> */}
-          {/* left message end */}
-          {/* right part start */}
-          {/* <div className="right-message">
-            <div className="right-text">
-              <h6>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Commodi
-              </h6>
-            </div>
-            <p>Today, 2:01pm</p>
-          </div> */}
-          {/* right part end */}
+
           {/* left message start */}
           {/* <div className="left-message">
             <div className="left-img">
