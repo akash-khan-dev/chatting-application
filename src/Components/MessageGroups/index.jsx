@@ -15,7 +15,7 @@ const MessageGroups = () => {
       });
       setMassegeGroup(massegeGroupArr);
     });
-  }, []);
+  }, [db]);
   console.log(massegeGroup);
   return (
     <>

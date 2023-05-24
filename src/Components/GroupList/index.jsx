@@ -114,10 +114,9 @@ export const GroupList = () => {
 
   // group name search fundamental
   const [search, setSearch] = useState("");
-  const groupQuerySearch = useRef(search);
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    groupQuerySearch.current = e.target.value;
   };
   return (
     <>
@@ -132,9 +131,7 @@ export const GroupList = () => {
             <Alert severity="error">no more groups yet</Alert>
           ) : (
             join
-              .filter((item) =>
-                item.groupname.toLowerCase().includes(groupQuerySearch.current)
-              )
+              .filter((item) => item.groupname.toLowerCase().includes(search))
               .map((item, i) => (
                 <div key={i} className="group-item-wrapper">
                   <div className="group-img">

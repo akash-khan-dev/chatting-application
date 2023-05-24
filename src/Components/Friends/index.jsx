@@ -66,12 +66,11 @@ export const Friends = () => {
   const handleUnfriend = (data) => {
     remove(ref(db, "Friends/" + data.id));
   };
-
+  // search for friend
   const [search, setSearch] = useState("");
-  const freandSearchQueryRef = useRef(search);
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    freandSearchQueryRef.current = e.target.value;
   };
   // handleSingleChat
   const handleSingleChat = (data) => {
@@ -124,9 +123,7 @@ export const Friends = () => {
               .filter(
                 (item) =>
                   item.recivername &&
-                  item.sendername
-                    .toLowerCase()
-                    .includes(freandSearchQueryRef.current)
+                  item.sendername.toLowerCase().includes(search)
               )
               .map((item, i) => (
                 <div

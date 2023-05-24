@@ -90,10 +90,9 @@ const MyGroup = () => {
 
   //myGroup search
   const [search, setSearch] = useState("");
-  const myGroupQueryRef = useRef(search);
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    myGroupQueryRef.current = e.target.value;
   };
   return (
     <>
@@ -145,9 +144,7 @@ const MyGroup = () => {
             )
           ) : (
             myGroup
-              .filter((item) =>
-                item.groupname.toLowerCase().includes(myGroupQueryRef.current)
-              )
+              .filter((item) => item.groupname.toLowerCase().includes(search))
               .map((item, i) => (
                 <div key={i} className="my-group-wrapper">
                   <div className="my-group-img">
