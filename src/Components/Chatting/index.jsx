@@ -236,7 +236,7 @@ export const Chatting = () => {
             <input onChange={(e) => setMsg(e.target.value)} type="text" />
             <SpeedDial
               ariaLabel="SpeedDial basic example"
-              sx={{ position: "absolute", bottom: 23, right: 288 }}
+              sx={{ position: "absolute", bottom: 2, right: -5 }}
               icon={<SpeedDialIcon />}
             >
               {actions.map((action) => (

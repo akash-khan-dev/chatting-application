@@ -215,6 +215,7 @@
   width: 80%;
   background-color: var(--secondary-white);
   border-radius: 10px;
+  position: relative;
 }
 .inputs-box input {
   width: 100%;
