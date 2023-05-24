@@ -18,7 +18,7 @@
 }
 .open-camera {
   position: absolute;
-  top: 2%;
+  top: 5%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 999;

@@ -22,7 +22,6 @@ const UserList = () => {
   const [frnd, setFrnd] = useState([]);
   const [cancle, setCancle] = useState([]);
   const [search, setSearch] = useState("");
-  const searchQueryRef = useRef(search);
 
   const user = useSelector((user) => user.logIn.login);
   //  show user
@@ -121,21 +120,7 @@ const UserList = () => {
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    searchQueryRef.current = e.target.value;
   };
-
-  // const handleSearch = (e) => {
-  //   const search = [];
-  //   users.filter((item) => {
-  //     if (item.username.toLowerCase().includes(e.target.value.toLowerCase())) {
-  //       search.push(item);
-  //     } else {
-  //       search.push("not found");
-  //     }
-  //   });
-  //   setSearch(search);
-  // };
-  // console.log(search);
 
   return (
     <>
@@ -146,9 +131,7 @@ const UserList = () => {
         </div>
         <div className="user-list-container">
           {users
-            .filter((item) =>
-              item.username.toLowerCase().includes(searchQueryRef.current)
-            )
+            .filter((item) => item.username.toLowerCase().includes(search))
             .map((item, i) => (
               <div key={i} className="user-list-wrapper">
                 <div className="user-list-img">

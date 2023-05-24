@@ -47,10 +47,8 @@ export const FriendRequest = () => {
   // friends request search functionality
 
   const [search, setSearch] = useState("");
-  const friendRequestQueryRef = useRef(search);
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    friendRequestQueryRef.current = e.target.value;
   };
   return (
     <>
@@ -64,11 +62,7 @@ export const FriendRequest = () => {
             <Alert severity="error">no Friends yet!</Alert>
           ) : (
             friends
-              .filter((item) =>
-                item.sendername
-                  .toLowerCase()
-                  .includes(friendRequestQueryRef.current)
-              )
+              .filter((item) => item.sendername.toLowerCase().includes(search))
               .map((item, i) => (
                 <div key={i} className="friend-request-wrapper">
                   <div className="friend-request-img">

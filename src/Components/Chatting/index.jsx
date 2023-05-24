@@ -17,9 +17,15 @@ import { Button } from "@mui/material";
 import Camera from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 import { useSelector } from "react-redux";
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import moment from "moment/moment";
-
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import {
+  getStorage,
+  ref as storeRef,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 const actions = [
   { icon: <SaveIcon />, name: "Save" },
   { icon: <KeyboardVoiceIcon />, name: "Voice" },
@@ -28,6 +34,8 @@ const actions = [
 ];
 
 export const Chatting = () => {
+  const storage = getStorage();
+
   const db = getDatabase();
   const [msg, setMsg] = useState("");
   const [allMsg, setAllMsg] = useState([]);
@@ -40,7 +48,6 @@ export const Chatting = () => {
       setShowCamera(true);
     } else if (name === "Gallery") {
       chooseFile.current.click();
-      // console.log("gallery");
     }
   };
 
@@ -78,9 +85,32 @@ export const Chatting = () => {
       });
     });
   }, [activeChangeName.id]);
+
+  //send a capture img
+
   function handleTakePhoto(dataUri) {
     // Do stuff with the photo...
-    console.log("dataUri");
+    // console.log(dataUri);
+    const storageRef = storeRef(
+      storage,
+      `CaptureSendImg/ ${user.displayName} = ${user.uid}/ ${uuidv4()}`
+    );
+    uploadString(storageRef, dataUri, "data_url").then((snapshot) => {
+      getDownloadURL(storageRef).then((downloadURL) => {
+        set(push(ref(db, "singleMsg")), {
+          whosendname: user.displayName,
+          whosendid: user.uid,
+          whorecivename: activeChangeName.name,
+          whoreciveid: activeChangeName.id,
+          img: downloadURL,
+          date: `${new Date().getFullYear()}-${
+            new Date().getMonth() + 1
+          }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
+        }).then(() => {
+          setShowCamera(false);
+        });
+      });
+    });
   }
   return (
     <>
@@ -94,7 +124,7 @@ export const Chatting = () => {
             </div>
           </div>
           <div className="active-user-name">
-            <h1>{activeChangeName.name}</h1>
+            <h1>{activeChangeName?.name}</h1>
             <p>Online</p>
           </div>
           <div className="active-user-info">
@@ -126,7 +156,16 @@ export const Chatting = () => {
                       </div>
                     </>
                   ) : (
-                    "images"
+                    <div className="right-message">
+                      <div className="right-img">
+                        <ModalImage
+                          className="modal"
+                          small={item.img}
+                          large={item.img}
+                        />
+                      </div>
+                      <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                    </div>
                   )
                 ) : item.msg ? (
                   <>
@@ -138,7 +177,12 @@ export const Chatting = () => {
                     </div>
                   </>
                 ) : (
-                  "images"
+                  <div className="left-message">
+                    <div className="left-img">
+                      <ModalImage small={item.img} large={item.img} />
+                    </div>
+                    <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                  </div>
                 )
               )
             : "group"}
