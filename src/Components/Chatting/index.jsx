@@ -24,18 +24,22 @@ import {
   ref as storeRef,
   getDownloadURL,
   uploadString,
+  uploadBytesResumable,
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-const actions = [
-  { icon: <SaveIcon />, name: "Save" },
-  { icon: <KeyboardVoiceIcon />, name: "Voice" },
-  { icon: <CollectionsIcon />, name: "Gallery" },
-  { icon: <PhotoCameraIcon />, name: "Camera" },
-];
 
 export const Chatting = () => {
-  const storage = getStorage();
+  const actions = [
+    { icon: <SaveIcon />, name: "Save" },
+    { icon: <KeyboardVoiceIcon />, name: "Voice" },
+    {
+      icon: <CollectionsIcon />,
+      name: "Gallery",
+    },
+    { icon: <PhotoCameraIcon />, name: "Camera" },
+  ];
 
+  const storage = getStorage();
   const db = getDatabase();
   const [msg, setMsg] = useState("");
   const [allMsg, setAllMsg] = useState([]);
@@ -112,6 +116,54 @@ export const Chatting = () => {
       });
     });
   }
+  // send for img functionality
+  const handleImgSend = (e) => {
+    const imgFile = e.target.files[0].name;
+    console.log(e.target.files[0]);
+
+    const storageRef = storeRef(
+      storage,
+      `${user.displayName} = SendImg/ ${imgFile}`
+    );
+
+    const uploadTask = uploadBytesResumable(storageRef, e.target.files[0]);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // const progress =
+        //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        // console.log("Upload is " + progress + "% done");
+        // switch (snapshot.state) {
+        //   case "paused":
+        //     console.log("Upload is paused");
+        //     break;
+        //   case "running":
+        //     console.log("Upload is running");
+        //     break;
+        // }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          set(push(ref(db, "singleMsg")), {
+            whosendname: user.displayName,
+            whosendid: user.uid,
+            whorecivename: activeChangeName.name,
+            whoreciveid: activeChangeName.id,
+            img: downloadURL,
+            date: `${new Date().getFullYear()}-${
+              new Date().getMonth() + 1
+            }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
+          });
+        });
+      }
+    );
+  };
   return (
     <>
       <div className="chatting-box">
@@ -189,29 +241,6 @@ export const Chatting = () => {
 
           {/* left message start */}
           {/* <div className="left-message">
-            <div className="left-img">
-              <ModalImage
-                small={"./images/sun.jpg"}
-                large={"./images/sun.jpg"}
-              />
-            </div>
-            <p>Today, 2:01pm</p>
-          </div> */}
-          {/* left message end */}
-          {/* right message start */}
-          {/* <div className="right-message">
-            <div className="right-img">
-              <ModalImage
-                className="modal"
-                small={"./images/chatt.jpg"}
-                large={"./images/chatt.jpg"}
-              />
-            </div>
-            <p>Today, 2:01pm</p>
-          </div> */}
-          {/* right message end */}
-          {/* left message start */}
-          {/* <div className="left-message">
             <audio controls></audio>
             <p>Today, 2:01pm</p>
           </div> */}
@@ -248,8 +277,13 @@ export const Chatting = () => {
                 />
               ))}
             </SpeedDial>
+            <input
+              hidden
+              onChange={handleImgSend}
+              type="file"
+              ref={chooseFile}
+            />
           </div>
-          <input hidden type="file" ref={chooseFile} />
 
           <Button
             onClick={handleSendMessage}
