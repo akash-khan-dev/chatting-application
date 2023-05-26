@@ -117,10 +117,9 @@ export const Chatting = () => {
     });
   }
   // send for img functionality
+  const [progressBar, setProgressBar] = useState("");
   const handleImgSend = (e) => {
     const imgFile = e.target.files[0].name;
-    console.log(e.target.files[0]);
-
     const storageRef = storeRef(
       storage,
       `${user.displayName} = SendImg/ ${imgFile}`
@@ -131,9 +130,9 @@ export const Chatting = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // const progress =
-        //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        // console.log("Upload is " + progress + "% done");
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgressBar("Upload is " + progress + "% done");
         // switch (snapshot.state) {
         //   case "paused":
         //     console.log("Upload is paused");
@@ -163,6 +162,13 @@ export const Chatting = () => {
         });
       }
     );
+  };
+  // console.log(progressBar);
+  // handleMsgSendInterBtn
+  const handleMsgSendInterBtn = (e) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
   };
   return (
     <>
@@ -260,9 +266,16 @@ export const Chatting = () => {
           </div> */}
           {/* left message end */}
         </div>
+        <div>
+          <p>{progressBar}</p>
+        </div>
         <div className="write-box">
           <div className="inputs-box">
-            <input onChange={(e) => setMsg(e.target.value)} type="text" />
+            <input
+              onKeyUp={handleMsgSendInterBtn}
+              onChange={(e) => setMsg(e.target.value)}
+              type="text"
+            />
             <SpeedDial
               ariaLabel="SpeedDial basic example"
               sx={{ position: "absolute", bottom: 2, right: -5 }}
