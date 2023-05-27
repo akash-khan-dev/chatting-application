@@ -4,7 +4,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import ModalImage from "react-modal-image";
 import { FaTelegramPlane } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
-
+import SendIcon from "@mui/icons-material/Send";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -26,6 +27,7 @@ import {
   uploadString,
   uploadBytesResumable,
 } from "firebase/storage";
+import { AudioRecorder } from "react-audio-voice-recorder";
 import { v4 as uuidv4 } from "uuid";
 
 export const Chatting = () => {
@@ -43,6 +45,9 @@ export const Chatting = () => {
   const db = getDatabase();
   const [msg, setMsg] = useState("");
   const [allMsg, setAllMsg] = useState([]);
+  const [showAudio, setShowAudio] = useState(false);
+  const [audioUrl, setAudioUrl] = useState("");
+  const [blobUrl, setBlobUrl] = useState("");
   const user = useSelector((user) => user.logIn.login);
   const activeChangeName = useSelector((user) => user.active.active);
   const [showCamera, setShowCamera] = useState(false);
@@ -163,12 +168,24 @@ export const Chatting = () => {
       }
     );
   };
-  // console.log(progressBar);
+
   // handleMsgSendInterBtn
   const handleMsgSendInterBtn = (e) => {
     if (e.key === "Enter") {
       handleSendMessage();
     }
+  };
+
+  // for voice messages
+  const addAudioElement = (blob) => {
+    const url = URL.createObjectURL(blob);
+    setAudioUrl(url);
+    setBlobUrl(blob);
+
+    // const audio = document.createElement("audio");
+    // audio.src = url;
+    // audio.controls = true;
+    // document.body.appendChild(audio);
   };
   return (
     <>
@@ -247,7 +264,7 @@ export const Chatting = () => {
 
           {/* left message start */}
           {/* <div className="left-message">
-            <audio controls></audio>
+            <audio controls src={audioUrl}></audio>
             <p>Today, 2:01pm</p>
           </div> */}
           {/* left message end */}
@@ -269,42 +286,73 @@ export const Chatting = () => {
         <div>
           <p>{progressBar}</p>
         </div>
-        <div className="write-box">
-          <div className="inputs-box">
-            <input
-              onKeyUp={handleMsgSendInterBtn}
-              onChange={(e) => setMsg(e.target.value)}
-              type="text"
-            />
-            <SpeedDial
-              ariaLabel="SpeedDial basic example"
-              sx={{ position: "absolute", bottom: 2, right: -5 }}
-              icon={<SpeedDialIcon />}
-            >
-              {actions.map((action) => (
-                <SpeedDialAction
-                  key={action.name}
-                  onClick={() => showMorefundamantal(action.name)}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
+        <div className="div">
+          {!showAudio && !audioUrl && (
+            <div className="write-box">
+              <div className="inputs-box">
+                <input
+                  onKeyUp={handleMsgSendInterBtn}
+                  onChange={(e) => setMsg(e.target.value)}
+                  type="text"
                 />
-              ))}
-            </SpeedDial>
-            <input
-              hidden
-              onChange={handleImgSend}
-              type="file"
-              ref={chooseFile}
+
+                <SpeedDial
+                  ariaLabel="SpeedDial basic example"
+                  sx={{ position: "absolute", bottom: 2, right: -5 }}
+                  icon={<SpeedDialIcon />}
+                >
+                  {actions.map((action) => (
+                    <SpeedDialAction
+                      key={action.name}
+                      onClick={() => showMorefundamantal(action.name)}
+                      icon={action.icon}
+                      tooltipTitle={action.name}
+                    />
+                  ))}
+                </SpeedDial>
+                <input
+                  hidden
+                  onChange={handleImgSend}
+                  type="file"
+                  ref={chooseFile}
+                />
+              </div>
+
+              <Button
+                onClick={handleSendMessage}
+                className="send-button"
+                variant="contained"
+              >
+                <FaTelegramPlane />
+              </Button>
+            </div>
+          )}
+          <div
+            className="audio-record"
+            onClick={() => setShowAudio(!showAudio)}
+          >
+            <AudioRecorder
+              onRecordingComplete={addAudioElement}
+              audioTrackConstraints={{
+                noiseSuppression: true,
+                echoCancellation: true,
+              }}
+              downloadOnSavePress={true}
+              downloadFileExtension="mp3"
             />
           </div>
+          {audioUrl && (
+            <div className="audio-sound">
+              <audio controls src={audioUrl}></audio>
 
-          <Button
-            onClick={handleSendMessage}
-            className="send-button"
-            variant="contained"
-          >
-            <FaTelegramPlane />
-          </Button>
+              <div className="voice-button" variant="contained">
+                <SendIcon />
+              </div>
+              <div className="voice-button" variant="contained">
+                <DeleteIcon />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

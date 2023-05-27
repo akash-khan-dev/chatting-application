@@ -16,6 +16,7 @@
     "formik": "^2.2.9",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-audio-voice-recorder": "^1.1.7",
     "react-cropper": "^2.1.8",
     "react-dom": "^18.2.0",
     "react-html5-camera-photo": "^1.5.11",

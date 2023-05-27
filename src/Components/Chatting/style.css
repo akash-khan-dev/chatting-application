@@ -232,3 +232,29 @@
 .send-button {
   width: 100px;
 }
+
+.audio-record {
+  position: absolute;
+  right: 343px;
+  bottom: 24px;
+  z-index: 11;
+}
+.recording {
+  border-radius: 12px;
+  width: 500px !important;
+  transition: all 0.2s ease-out;
+  padding: 10px 10px !important;
+}
+.audio-sound {
+  position: absolute;
+  bottom: 2%;
+  right: 420px !important;
+  display: flex;
+  justify-content: space-between;
+}
+.voice-button {
+  padding: 0px 10px;
+  /* margin: 5px; */
+  margin-top: 15px;
+  cursor: pointer;
+}
