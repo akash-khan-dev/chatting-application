@@ -26,6 +26,7 @@ import {
   getDownloadURL,
   uploadString,
   uploadBytesResumable,
+  uploadBytes,
 } from "firebase/storage";
 import { AudioRecorder } from "react-audio-voice-recorder";
 import { v4 as uuidv4 } from "uuid";
@@ -187,6 +188,31 @@ export const Chatting = () => {
     // audio.controls = true;
     // document.body.appendChild(audio);
   };
+
+  // for voice record send
+  const handleSendVoiceRecord = () => {
+    console.log("hello");
+    const storageRef = storeRef(storage, audioUrl);
+
+    uploadBytes(storageRef, blobUrl)
+      .then((snapshot) => {
+        getDownloadURL(storageRef).then((downloadURL) => {
+          set(push(ref(db, "singleMsg")), {
+            whosendname: user.displayName,
+            whosendid: user.uid,
+            whorecivename: activeChangeName.name,
+            whoreciveid: activeChangeName.id,
+            voice: downloadURL,
+            date: `${new Date().getFullYear()}-${
+              new Date().getMonth() + 1
+            }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
+          });
+        });
+      })
+      .then(() => {
+        setAudioUrl("");
+      });
+  };
   return (
     <>
       <div className="chatting-box">
@@ -230,7 +256,7 @@ export const Chatting = () => {
                         <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                       </div>
                     </>
-                  ) : (
+                  ) : item.img ? (
                     <div className="right-message">
                       <div className="right-img">
                         <ModalImage
@@ -239,6 +265,11 @@ export const Chatting = () => {
                           large={item.img}
                         />
                       </div>
+                      <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                    </div>
+                  ) : (
+                    <div className="right-message">
+                      <audio controls src={item.voice}></audio>
                       <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                     </div>
                   )
@@ -251,11 +282,16 @@ export const Chatting = () => {
                       <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                     </div>
                   </>
-                ) : (
+                ) : item.img ? (
                   <div className="left-message">
                     <div className="left-img">
                       <ModalImage small={item.img} large={item.img} />
                     </div>
+                    <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                  </div>
+                ) : (
+                  <div className="left-message">
+                    <audio controls src={item.voice}></audio>
                     <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                   </div>
                 )
@@ -287,7 +323,7 @@ export const Chatting = () => {
           <p>{progressBar}</p>
         </div>
         <div className="div">
-          {!showAudio && !audioUrl && (
+          {!showAudio & !audioUrl && (
             <div className="write-box">
               <div className="inputs-box">
                 <input
@@ -345,10 +381,18 @@ export const Chatting = () => {
             <div className="audio-sound">
               <audio controls src={audioUrl}></audio>
 
-              <div className="voice-button" variant="contained">
+              <div
+                onClick={handleSendVoiceRecord}
+                className="voice-button"
+                variant="contained"
+              >
                 <SendIcon />
               </div>
-              <div className="voice-button" variant="contained">
+              <div
+                onClick={() => setAudioUrl("")}
+                className="voice-button"
+                variant="contained"
+              >
                 <DeleteIcon />
               </div>
             </div>
