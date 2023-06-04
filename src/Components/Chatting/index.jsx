@@ -10,9 +10,8 @@ import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import CollectionsIcon from "@mui/icons-material/Collections";
-import SaveIcon from "@mui/icons-material/Save";
-import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+
 import { Button } from "@mui/material";
 // react html camera photos
 import Camera from "react-html5-camera-photo";
@@ -30,11 +29,10 @@ import {
 } from "firebase/storage";
 import { AudioRecorder } from "react-audio-voice-recorder";
 import { v4 as uuidv4 } from "uuid";
+import Emoji from "../Emoji";
 
 export const Chatting = () => {
   const actions = [
-    { icon: <SaveIcon />, name: "Save" },
-    { icon: <KeyboardVoiceIcon />, name: "Voice" },
     {
       icon: <CollectionsIcon />,
       name: "Gallery",
@@ -49,10 +47,12 @@ export const Chatting = () => {
   const [showAudio, setShowAudio] = useState(false);
   const [audioUrl, setAudioUrl] = useState("");
   const [blobUrl, setBlobUrl] = useState("");
+  const [openEmoji, setOpenEmoji] = useState(false);
   const user = useSelector((user) => user.logIn.login);
   const activeChangeName = useSelector((user) => user.active.active);
   const [showCamera, setShowCamera] = useState(false);
   const chooseFile = useRef();
+  const scrollMsg = useRef(null);
   const showMorefundamantal = (name) => {
     if (name === "Camera") {
       setShowCamera(true);
@@ -182,16 +182,10 @@ export const Chatting = () => {
     const url = URL.createObjectURL(blob);
     setAudioUrl(url);
     setBlobUrl(blob);
-
-    // const audio = document.createElement("audio");
-    // audio.src = url;
-    // audio.controls = true;
-    // document.body.appendChild(audio);
   };
 
   // for voice record send
   const handleSendVoiceRecord = () => {
-    console.log("hello");
     const storageRef = storeRef(storage, audioUrl);
 
     uploadBytes(storageRef, blobUrl)
@@ -211,8 +205,22 @@ export const Chatting = () => {
       })
       .then(() => {
         setAudioUrl("");
-      });
+      })
+      .then(() => {});
   };
+
+  // for Emoji Select
+  const handleEmojiSelect = (emoji) => {
+    setMsg(msg + emoji.emoji);
+  };
+
+  //  for scrollMsg
+  useEffect(() => {
+    scrollMsg.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [allMsg]);
+
   return (
     <>
       <div className="chatting-box">
@@ -242,60 +250,61 @@ export const Chatting = () => {
             />
           </div>
         )}
-
         <div className="message">
           {activeChangeName.status === "single"
-            ? allMsg.map((item) =>
-                item.whosendid === user.uid ? (
-                  item.msg ? (
-                    <>
+            ? allMsg.map((item) => (
+                <div ref={scrollMsg}>
+                  {item.whosendid === user.uid ? (
+                    item.msg ? (
+                      <>
+                        <div className="right-message">
+                          <div className="right-text">
+                            <h6>{item.msg}</h6>
+                          </div>
+                          <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                        </div>
+                      </>
+                    ) : item.img ? (
                       <div className="right-message">
-                        <div className="right-text">
+                        <div className="right-img">
+                          <ModalImage
+                            className="modal"
+                            small={item.img}
+                            large={item.img}
+                          />
+                        </div>
+                        <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                      </div>
+                    ) : (
+                      <div className="right-message">
+                        <audio controls src={item.voice}></audio>
+                        <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                      </div>
+                    )
+                  ) : item.msg ? (
+                    <>
+                      <div className="left-message">
+                        <div className="left-text">
                           <h6>{item.msg}</h6>
                         </div>
                         <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                       </div>
                     </>
                   ) : item.img ? (
-                    <div className="right-message">
-                      <div className="right-img">
-                        <ModalImage
-                          className="modal"
-                          small={item.img}
-                          large={item.img}
-                        />
+                    <div className="left-message">
+                      <div className="left-img">
+                        <ModalImage small={item.img} large={item.img} />
                       </div>
                       <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                     </div>
                   ) : (
-                    <div className="right-message">
+                    <div className="left-message">
                       <audio controls src={item.voice}></audio>
                       <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                     </div>
-                  )
-                ) : item.msg ? (
-                  <>
-                    <div className="left-message">
-                      <div className="left-text">
-                        <h6>{item.msg}</h6>
-                      </div>
-                      <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
-                    </div>
-                  </>
-                ) : item.img ? (
-                  <div className="left-message">
-                    <div className="left-img">
-                      <ModalImage small={item.img} large={item.img} />
-                    </div>
-                    <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
-                  </div>
-                ) : (
-                  <div className="left-message">
-                    <audio controls src={item.voice}></audio>
-                    <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
-                  </div>
-                )
-              )
+                  )}
+                </div>
+              ))
             : "group"}
 
           {/* left message start */}
@@ -322,16 +331,22 @@ export const Chatting = () => {
         <div>
           <p>{progressBar}</p>
         </div>
+
         <div className="div">
           {!showAudio & !audioUrl && (
             <div className="write-box">
               <div className="inputs-box">
+                <Emoji
+                  handleEmojiSelect={handleEmojiSelect}
+                  setOpenEmoji={setOpenEmoji}
+                  openEmoji={openEmoji}
+                />
                 <input
                   onKeyUp={handleMsgSendInterBtn}
                   onChange={(e) => setMsg(e.target.value)}
                   type="text"
+                  value={msg}
                 />
-
                 <SpeedDial
                   ariaLabel="SpeedDial basic example"
                   sx={{ position: "absolute", bottom: 2, right: -5 }}
@@ -346,6 +361,7 @@ export const Chatting = () => {
                     />
                   ))}
                 </SpeedDial>
+
                 <input
                   hidden
                   onChange={handleImgSend}
@@ -353,7 +369,6 @@ export const Chatting = () => {
                   ref={chooseFile}
                 />
               </div>
-
               <Button
                 onClick={handleSendMessage}
                 className="send-button"

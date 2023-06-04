@@ -44,7 +44,6 @@ export const Login = () => {
   // google authentication
   const handleGoogleAuth = () => {
     signInWithPopup(auth, Googleprovider).then(({ user }) => {
-      console.log("googleUser", user);
       if (reduxUser.uid) {
         set(ref(db, "users/" + reduxUser.uid), {
           username: reduxUser.displayName,

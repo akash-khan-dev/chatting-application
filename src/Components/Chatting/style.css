@@ -218,10 +218,10 @@
   position: relative;
 }
 .inputs-box input {
-  width: 100%;
   border: none;
   outline: none;
   background-color: var(--secondary-white);
+  width: 370px;
 }
 
 .css-7dv1rb-MuiButtonBase-root-MuiFab-root-MuiSpeedDial-fab {
@@ -256,5 +256,20 @@
   padding: 0px 10px;
   /* margin: 5px; */
   margin-top: 15px;
+  cursor: pointer;
+}
+.emoji {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: #ebebeb;
+  box-shadow: 0 2px 5px #bebebe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  right: 20%;
   cursor: pointer;
 }
