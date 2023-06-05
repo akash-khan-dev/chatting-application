@@ -205,8 +205,7 @@ export const Chatting = () => {
       })
       .then(() => {
         setAudioUrl("");
-      })
-      .then(() => {});
+      });
   };
 
   // for Emoji Select
@@ -240,16 +239,6 @@ export const Chatting = () => {
             <BsThreeDotsVertical />
           </div>
         </div>
-        {showCamera && (
-          <div className="open-camera">
-            <RxCross2 onClick={() => setShowCamera(false)} />
-            <Camera
-              onTakePhoto={(dataUri) => {
-                handleTakePhoto(dataUri);
-              }}
-            />
-          </div>
-        )}
         <div className="message">
           {activeChangeName.status === "single"
             ? allMsg.map((item) => (
@@ -305,7 +294,7 @@ export const Chatting = () => {
                   )}
                 </div>
               ))
-            : "group"}
+            : "group Message"}
 
           {/* left message start */}
           {/* <div className="left-message">
@@ -328,6 +317,17 @@ export const Chatting = () => {
           </div> */}
           {/* left message end */}
         </div>
+        {showCamera && (
+          <div className="open-camera">
+            <RxCross2 onClick={() => setShowCamera(false)} />
+            <Camera
+              onTakePhoto={(dataUri) => {
+                handleTakePhoto(dataUri);
+              }}
+            />
+          </div>
+        )}
+
         <div>
           <p>{progressBar}</p>
         </div>
