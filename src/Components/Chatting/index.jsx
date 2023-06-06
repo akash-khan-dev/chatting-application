@@ -44,6 +44,7 @@ export const Chatting = () => {
   const db = getDatabase();
   const [msg, setMsg] = useState("");
   const [allMsg, setAllMsg] = useState([]);
+  const [groupMsg, setGroupMsg] = useState([]);
   const [showAudio, setShowAudio] = useState(false);
   const [audioUrl, setAudioUrl] = useState("");
   const [blobUrl, setBlobUrl] = useState("");
@@ -88,7 +89,7 @@ export const Chatting = () => {
       });
     }
   };
-  // get a message in database
+  // get a single message in database
   useEffect(() => {
     onValue(ref(db, "singleMsg"), (snapshot) => {
       let singleMsgArr = [];
@@ -106,6 +107,17 @@ export const Chatting = () => {
     });
   }, [activeChangeName.id]);
 
+  // get a group message in database
+  useEffect(() => {
+    onValue(ref(db, "groupMsg"), (snapshot) => {
+      let groupMsgArr = [];
+      snapshot.forEach((item) => {
+        groupMsgArr.push(item.val());
+      });
+      setGroupMsg(groupMsgArr);
+    });
+  }, [activeChangeName.id]);
+  console.log("group", groupMsg);
   //send a capture img
 
   function handleTakePhoto(dataUri) {
