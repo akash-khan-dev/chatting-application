@@ -38,11 +38,7 @@ const MessageGroups = () => {
         </div>
         <div className="message-group-item-container">
           {massegeGroup.map((item, i) => (
-            <div
-              key={i}
-              className="message-group-item-wrapper"
-              onClick={() => handleGroupMessage(item)}
-            >
+            <div key={i} className="message-group-item-wrapper">
               <div className="massege-group-item-img">
                 <picture>
                   <img src=" ./images/akash.jpg" alt="man" />
@@ -52,7 +48,10 @@ const MessageGroups = () => {
                 <h5>{item.groupname}</h5>
                 <p>admin:{item.adminname}</p>
               </div>
-              <div className="massege-group-item-button">
+              <div
+                className="massege-group-item-button"
+                onClick={() => handleGroupMessage(item)}
+              >
                 <Button variant="contained">Massege</Button>
               </div>
             </div>

@@ -211,7 +211,7 @@
   justify-content: space-around;
 }
 .inputs-box {
-  padding: 15px 0px;
+  padding: 15px 10px;
   width: 80%;
   background-color: var(--secondary-white);
   border-radius: 10px;

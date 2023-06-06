@@ -61,7 +61,7 @@ export const Chatting = () => {
     }
   };
 
-  // handleSendMessage
+  // for handleSendMessage
   const handleSendMessage = () => {
     if (activeChangeName.status === "single") {
       set(push(ref(db, "singleMsg")), {
@@ -75,7 +75,17 @@ export const Chatting = () => {
         }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
       });
     } else {
-      console.log("aita group message er jonno");
+      set(push(ref(db, "groupMsg")), {
+        whosendname: user.displayName,
+        whosendid: user.uid,
+        whorecivename: activeChangeName.name,
+        whoreciveid: activeChangeName.id,
+        msg: msg,
+        adminid: activeChangeName.adminid,
+        date: `${new Date().getFullYear()}-${
+          new Date().getMonth() + 1
+        }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
+      });
     }
   };
   // get a message in database
