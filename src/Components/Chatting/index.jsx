@@ -45,6 +45,7 @@ export const Chatting = () => {
   const [msg, setMsg] = useState("");
   const [allMsg, setAllMsg] = useState([]);
   const [groupMsg, setGroupMsg] = useState([]);
+  const [groupMembers, setGroupMembers] = useState([]);
   const [showAudio, setShowAudio] = useState(false);
   const [audioUrl, setAudioUrl] = useState("");
   const [blobUrl, setBlobUrl] = useState("");
@@ -107,6 +108,19 @@ export const Chatting = () => {
     });
   }, [activeChangeName.id]);
 
+  // for group members information
+  useEffect(() => {
+    onValue(ref(db, "groupmember/"), (snapshot) => {
+      let groupMembersArr = [];
+      snapshot.forEach((item) => {
+        console.log("value", item.val());
+        groupMembersArr.push(item.val().groupid + item.val().userid);
+      });
+      setGroupMembers(groupMembersArr);
+    });
+  }, [db]);
+  console.log("memberid", groupMembers);
+
   // get a group message in database
   useEffect(() => {
     onValue(ref(db, "groupMsg"), (snapshot) => {
@@ -117,7 +131,7 @@ export const Chatting = () => {
       setGroupMsg(groupMsgArr);
     });
   }, [activeChangeName.id]);
-  console.log("group", groupMsg);
+
   //send a capture img
 
   function handleTakePhoto(dataUri) {
@@ -316,29 +330,13 @@ export const Chatting = () => {
                   )}
                 </div>
               ))
-            : "group Message"}
-
-          {/* left message start */}
-          {/* <div className="left-message">
-            <audio controls src={audioUrl}></audio>
-            <p>Today, 2:01pm</p>
-          </div> */}
-          {/* left message end */}
-
-          {/* right message start */}
-          {/* <div className="right-message">
-            <audio controls></audio>
-            <p>Today, 2:01pm</p>
-          </div> */}
-          {/* right message end */}
-
-          {/* left message start */}
-          {/* <div className="left-message">
-            <video controls></video>
-            <p>Today, 2:01pm</p>
-          </div> */}
-          {/* left message end */}
+            : user.uid === activeChangeName.adminid ||
+              groupMembers.includes(activeChangeName.id + user.uid)
+            ? groupMsg.map((item) => <div>{item.msg}</div>)
+            : "nai"}
         </div>
+        {console.log("check", activeChangeName.id)}
+        {console.log("check2", user.uid + activeChangeName.id)}
         {showCamera && (
           <div className="open-camera">
             <RxCross2 onClick={() => setShowCamera(false)} />

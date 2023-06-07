@@ -54,6 +54,7 @@ export const GroupList = () => {
       setJoin(joinArr);
     });
   }, [db, user.uid]);
+
   //  join gruops handling
   const handleJoin = (data) => {
     set(push(ref(db, "JoinGroupRequest")), {

@@ -10,7 +10,7 @@ const MessageGroups = () => {
   const dispatch = useDispatch();
   const [massegeGroup, setMassegeGroup] = useState([]);
   useEffect(() => {
-    const starCountRef = ref(db, "groupmember");
+    const starCountRef = ref(db, "Groups");
     onValue(starCountRef, (snapshot) => {
       let massegeGroupArr = [];
       snapshot.forEach((item) => {
@@ -25,10 +25,11 @@ const MessageGroups = () => {
       ActiveSingle({
         status: "group",
         name: item.groupname,
-        id: item.id,
+        id: item.groupid,
         adminid: item.adminid,
       })
     );
+    console.log("item", item.groupid);
   };
   return (
     <>
