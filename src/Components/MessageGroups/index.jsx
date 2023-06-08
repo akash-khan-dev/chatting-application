@@ -25,7 +25,7 @@ const MessageGroups = () => {
       ActiveSingle({
         status: "group",
         name: item.groupname,
-        id: item.groupid,
+        id: item.id,
         adminid: item.adminid,
       })
     );

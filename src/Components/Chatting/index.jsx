@@ -64,6 +64,7 @@ export const Chatting = () => {
   };
 
   // for handleSendMessage
+
   const handleSendMessage = () => {
     if (activeChangeName.status === "single") {
       set(push(ref(db, "singleMsg")), {
@@ -332,7 +333,27 @@ export const Chatting = () => {
               ))
             : user.uid === activeChangeName.adminid ||
               groupMembers.includes(activeChangeName.id + user.uid)
-            ? groupMsg.map((item) => <div>{item.msg}</div>)
+            ? groupMsg.map((item) => (
+                <div>
+                  {item.whosendid === user.uid
+                    ? item.whoreciveid === activeChangeName.id && (
+                        <div className="right-message">
+                          <div className="right-text">
+                            <h6>{item.msg}</h6>
+                          </div>
+                          <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                        </div>
+                      )
+                    : item.whoreciveid === activeChangeName.id && (
+                        <div className="left-message">
+                          <div className="left-text">
+                            <h6>{item.msg}</h6>
+                          </div>
+                          <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
+                        </div>
+                      )}
+                </div>
+              ))
             : "nai"}
         </div>
         {console.log("check", activeChangeName.id)}
