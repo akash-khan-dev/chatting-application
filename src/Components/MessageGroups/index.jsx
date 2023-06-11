@@ -29,7 +29,6 @@ const MessageGroups = () => {
         adminid: item.adminid,
       })
     );
-    console.log("item", item.groupid);
   };
   return (
     <>

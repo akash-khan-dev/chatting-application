@@ -22,12 +22,13 @@ import { ToastContainer, toast } from "react-toastify";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser } from "../../Feature/UserSlice/UserSlice";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, push, ref, set } from "firebase/database";
 
 export const Login = () => {
   const auth = getAuth();
   const db = getDatabase();
-  const reduxUser = useSelector((user) => user.logIn.login);
+  const user = useSelector((user) => user.logIn.login);
+
   const [showPass, setShowPass] = useState("password");
   const [loding, setLoding] = useState(false);
   const navigate = useNavigate();
@@ -44,10 +45,10 @@ export const Login = () => {
   // google authentication
   const handleGoogleAuth = () => {
     signInWithPopup(auth, Googleprovider).then(({ user }) => {
-      if (reduxUser.uid) {
-        set(ref(db, "users/" + reduxUser.uid), {
-          username: reduxUser.displayName,
-          email: reduxUser.email,
+      if (user.uid) {
+        set(push(ref(db, "users/" + user.uid)), {
+          username: user.displayName,
+          email: user.email,
         });
         dispatch(LoginUser(user));
         localStorage.setItem("users", JSON.stringify(user));
@@ -60,6 +61,7 @@ export const Login = () => {
     });
   };
   // facebook authentication
+
   const handleFacebookAuth = () => {
     signInWithPopup(auth, Facebookprovider).then(({ user }) => {
       dispatch(LoginUser(user));
@@ -85,6 +87,10 @@ export const Login = () => {
             dispatch(LoginUser(user));
             localStorage.setItem("users", JSON.stringify(user));
             setLoding(false);
+            set(ref(db, "Online/" + user.uid), {
+              userid: user.uid,
+            });
+
             navigate("/");
           } else {
             toast.success("Email Not Verified", {
@@ -97,6 +103,7 @@ export const Login = () => {
             setLoding(false);
           }
         })
+
         .catch((error) => {
           if (error.code.includes("auth/user-not-found")) {
             toast.success("auth/user-not-found", {

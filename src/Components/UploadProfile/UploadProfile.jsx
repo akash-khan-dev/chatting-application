@@ -60,8 +60,9 @@ export const UploadProfile = ({ setOpen }) => {
       });
     }
   };
+
   return (
-    <div className="upload-box">
+    <div>
       <input type="file" hidden ref={choosefile} onChange={handleChange} />
       <div className="upload">
         <div className="upload-icon" onClick={() => choosefile.current.click()}>

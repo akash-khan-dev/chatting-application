@@ -51,7 +51,7 @@ export const Chatting = () => {
   const [blobUrl, setBlobUrl] = useState("");
   const [openEmoji, setOpenEmoji] = useState(false);
   const user = useSelector((user) => user.logIn.login);
-  const activeChangeName = useSelector((user) => user.active.active);
+  const activeChatName = useSelector((user) => user.active.active);
   const [showCamera, setShowCamera] = useState(false);
   const chooseFile = useRef();
   const scrollMsg = useRef(null);
@@ -66,12 +66,12 @@ export const Chatting = () => {
   // for handleSendMessage
 
   const handleSendMessage = () => {
-    if (activeChangeName.status === "single") {
+    if (activeChatName.status === "single") {
       set(push(ref(db, "singleMsg")), {
         whosendname: user.displayName,
         whosendid: user.uid,
-        whorecivename: activeChangeName.name,
-        whoreciveid: activeChangeName.id,
+        whorecivename: activeChatName.name,
+        whoreciveid: activeChatName.id,
         msg: msg,
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
@@ -81,10 +81,10 @@ export const Chatting = () => {
       set(push(ref(db, "groupMsg")), {
         whosendname: user.displayName,
         whosendid: user.uid,
-        whorecivename: activeChangeName.name,
-        whoreciveid: activeChangeName.id,
+        whorecivename: activeChatName.name,
+        whoreciveid: activeChatName.id,
         msg: msg,
-        adminid: activeChangeName.adminid,
+        adminid: activeChatName.adminid,
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
         }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
@@ -98,29 +98,27 @@ export const Chatting = () => {
       snapshot.forEach((item) => {
         if (
           (user.uid === item.val().whosendid &&
-            item.val().whoreciveid === activeChangeName.id) ||
+            item.val().whoreciveid === activeChatName.id) ||
           (user.uid === item.val().whoreciveid &&
-            item.val().whosendid === activeChangeName.id)
+            item.val().whosendid === activeChatName.id)
         ) {
           singleMsgArr.push(item.val());
         }
         setAllMsg(singleMsgArr);
       });
     });
-  }, [activeChangeName.id]);
+  }, [activeChatName.id]);
 
   // for group members information
   useEffect(() => {
     onValue(ref(db, "groupmember/"), (snapshot) => {
       let groupMembersArr = [];
       snapshot.forEach((item) => {
-        console.log("value", item.val());
         groupMembersArr.push(item.val().groupid + item.val().userid);
       });
       setGroupMembers(groupMembersArr);
     });
   }, [db]);
-  console.log("memberid", groupMembers);
 
   // get a group message in database
   useEffect(() => {
@@ -131,7 +129,7 @@ export const Chatting = () => {
       });
       setGroupMsg(groupMsgArr);
     });
-  }, [activeChangeName.id]);
+  }, [activeChatName.id]);
 
   //send a capture img
 
@@ -147,8 +145,8 @@ export const Chatting = () => {
         set(push(ref(db, "singleMsg")), {
           whosendname: user.displayName,
           whosendid: user.uid,
-          whorecivename: activeChangeName.name,
-          whoreciveid: activeChangeName.id,
+          whorecivename: activeChatName.name,
+          whoreciveid: activeChatName.id,
           img: downloadURL,
           date: `${new Date().getFullYear()}-${
             new Date().getMonth() + 1
@@ -195,8 +193,8 @@ export const Chatting = () => {
           set(push(ref(db, "singleMsg")), {
             whosendname: user.displayName,
             whosendid: user.uid,
-            whorecivename: activeChangeName.name,
-            whoreciveid: activeChangeName.id,
+            whorecivename: activeChatName.name,
+            whoreciveid: activeChatName.id,
             img: downloadURL,
             date: `${new Date().getFullYear()}-${
               new Date().getMonth() + 1
@@ -231,8 +229,8 @@ export const Chatting = () => {
           set(push(ref(db, "singleMsg")), {
             whosendname: user.displayName,
             whosendid: user.uid,
-            whorecivename: activeChangeName.name,
-            whoreciveid: activeChangeName.id,
+            whorecivename: activeChatName.name,
+            whoreciveid: activeChatName.id,
             voice: downloadURL,
             date: `${new Date().getFullYear()}-${
               new Date().getMonth() + 1
@@ -257,6 +255,19 @@ export const Chatting = () => {
     });
   }, [allMsg]);
 
+  // for show online
+  const [showaOnline, setShowOnline] = useState([]);
+  useEffect(() => {
+    onValue(ref(db, "Online/"), (snapshot) => {
+      let OnlineArr = [];
+      snapshot.forEach((item) => {
+        OnlineArr.push(item.val().userid);
+      });
+      setShowOnline(OnlineArr);
+    });
+  }, []);
+  console.log(activeChatName);
+  console.log("showonline", showaOnline);
   return (
     <>
       <div className="chatting-box">
@@ -269,15 +280,15 @@ export const Chatting = () => {
             </div>
           </div>
           <div className="active-user-name">
-            <h1>{activeChangeName?.name}</h1>
-            <p>Online</p>
+            <h1>{activeChatName?.name}</h1>
+            {showaOnline.includes(activeChatName.id) ? "Online" : "Offline"}
           </div>
           <div className="active-user-info">
             <BsThreeDotsVertical />
           </div>
         </div>
         <div className="message">
-          {activeChangeName.status === "single"
+          {activeChatName.status === "single"
             ? allMsg.map((item) => (
                 <div ref={scrollMsg}>
                   {item.whosendid === user.uid ? (
@@ -331,12 +342,12 @@ export const Chatting = () => {
                   )}
                 </div>
               ))
-            : user.uid === activeChangeName.adminid ||
-              groupMembers.includes(activeChangeName.id + user.uid)
+            : user.uid === activeChatName.adminid ||
+              groupMembers.includes(activeChatName.id + user.uid)
             ? groupMsg.map((item) => (
                 <div>
                   {item.whosendid === user.uid
-                    ? item.whoreciveid === activeChangeName.id && (
+                    ? item.whoreciveid === activeChatName.id && (
                         <div className="right-message">
                           <div className="right-text">
                             <h6>{item.msg}</h6>
@@ -344,7 +355,7 @@ export const Chatting = () => {
                           <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                         </div>
                       )
-                    : item.whoreciveid === activeChangeName.id && (
+                    : item.whoreciveid === activeChatName.id && (
                         <div className="left-message">
                           <div className="left-text">
                             <h6>{item.msg}</h6>
@@ -356,8 +367,7 @@ export const Chatting = () => {
               ))
             : "nai"}
         </div>
-        {console.log("check", activeChangeName.id)}
-        {console.log("check2", user.uid + activeChangeName.id)}
+
         {showCamera && (
           <div className="open-camera">
             <RxCross2 onClick={() => setShowCamera(false)} />
@@ -369,10 +379,6 @@ export const Chatting = () => {
           </div>
         )}
 
-        <div>
-          <p>{progressBar}</p>
-        </div>
-
         <div className="div">
           {!showAudio & !audioUrl && (
             <div className="write-box">
@@ -382,6 +388,7 @@ export const Chatting = () => {
                   setOpenEmoji={setOpenEmoji}
                   openEmoji={openEmoji}
                 />
+
                 <input
                   onKeyUp={handleMsgSendInterBtn}
                   onChange={(e) => setMsg(e.target.value)}
