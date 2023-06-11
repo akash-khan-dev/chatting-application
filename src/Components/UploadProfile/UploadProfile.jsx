@@ -60,9 +60,23 @@ export const UploadProfile = ({ setOpen }) => {
       });
     }
   };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    handleChange(e);
+  };
 
   return (
-    <div>
+    <div
+      className="upload-box"
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragOver}
+      onDragLeave={handleDragOver}
+      onDrop={handleDrop}
+    >
       <input type="file" hidden ref={choosefile} onChange={handleChange} />
       <div className="upload">
         <div className="upload-icon" onClick={() => choosefile.current.click()}>
