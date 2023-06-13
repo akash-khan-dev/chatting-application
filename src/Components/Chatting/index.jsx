@@ -43,6 +43,7 @@ export const Chatting = () => {
   const storage = getStorage();
   const db = getDatabase();
   const [msg, setMsg] = useState("");
+  const [grpInput, setGrpInput] = useState("");
   const [allMsg, setAllMsg] = useState([]);
   const [groupMsg, setGroupMsg] = useState([]);
   const [groupMembers, setGroupMembers] = useState([]);
@@ -66,12 +67,12 @@ export const Chatting = () => {
   // for handleSendMessage
 
   const handleSendMessage = () => {
-    if (activeChatName.status === "single") {
+    if (activeChatName?.status === "single") {
       set(push(ref(db, "singleMsg")), {
         whosendname: user.displayName,
         whosendid: user.uid,
-        whorecivename: activeChatName.name,
-        whoreciveid: activeChatName.id,
+        whorecivename: activeChatName?.name,
+        whoreciveid: activeChatName?.id,
         msg: msg,
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
@@ -81,10 +82,10 @@ export const Chatting = () => {
       set(push(ref(db, "groupMsg")), {
         whosendname: user.displayName,
         whosendid: user.uid,
-        whorecivename: activeChatName.name,
-        whoreciveid: activeChatName.id,
+        whorecivename: activeChatName?.name,
+        whoreciveid: activeChatName?.id,
         msg: msg,
-        adminid: activeChatName.adminid,
+        adminid: activeChatName?.adminid,
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
         }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
@@ -98,16 +99,16 @@ export const Chatting = () => {
       snapshot.forEach((item) => {
         if (
           (user.uid === item.val().whosendid &&
-            item.val().whoreciveid === activeChatName.id) ||
+            item.val().whoreciveid === activeChatName?.id) ||
           (user.uid === item.val().whoreciveid &&
-            item.val().whosendid === activeChatName.id)
+            item.val().whosendid === activeChatName?.id)
         ) {
           singleMsgArr.push(item.val());
         }
         setAllMsg(singleMsgArr);
       });
     });
-  }, [activeChatName.id]);
+  }, [activeChatName?.id]);
 
   // for group members information
   useEffect(() => {
@@ -129,7 +130,7 @@ export const Chatting = () => {
       });
       setGroupMsg(groupMsgArr);
     });
-  }, [activeChatName.id]);
+  }, [activeChatName?.id]);
 
   //send a capture img
 
@@ -145,8 +146,8 @@ export const Chatting = () => {
         set(push(ref(db, "singleMsg")), {
           whosendname: user.displayName,
           whosendid: user.uid,
-          whorecivename: activeChatName.name,
-          whoreciveid: activeChatName.id,
+          whorecivename: activeChatName?.name,
+          whoreciveid: activeChatName?.id,
           img: downloadURL,
           date: `${new Date().getFullYear()}-${
             new Date().getMonth() + 1
@@ -193,8 +194,8 @@ export const Chatting = () => {
           set(push(ref(db, "singleMsg")), {
             whosendname: user.displayName,
             whosendid: user.uid,
-            whorecivename: activeChatName.name,
-            whoreciveid: activeChatName.id,
+            whorecivename: activeChatName?.name,
+            whoreciveid: activeChatName?.id,
             img: downloadURL,
             date: `${new Date().getFullYear()}-${
               new Date().getMonth() + 1
@@ -229,8 +230,8 @@ export const Chatting = () => {
           set(push(ref(db, "singleMsg")), {
             whosendname: user.displayName,
             whosendid: user.uid,
-            whorecivename: activeChatName.name,
-            whoreciveid: activeChatName.id,
+            whorecivename: activeChatName?.name,
+            whoreciveid: activeChatName?.id,
             voice: downloadURL,
             date: `${new Date().getFullYear()}-${
               new Date().getMonth() + 1
@@ -246,6 +247,7 @@ export const Chatting = () => {
   // for Emoji Select
   const handleEmojiSelect = (emoji) => {
     setMsg(msg + emoji.emoji);
+    setGrpInput(msg + emoji.emoji);
   };
 
   //  for scrollMsg
@@ -266,7 +268,7 @@ export const Chatting = () => {
       setShowOnline(OnlineArr);
     });
   }, []);
-  console.log(activeChatName);
+
   console.log("showonline", showaOnline);
   return (
     <>
@@ -281,14 +283,14 @@ export const Chatting = () => {
           </div>
           <div className="active-user-name">
             <h1>{activeChatName?.name}</h1>
-            {showaOnline.includes(activeChatName.id) ? "Online" : "Offline"}
+            {showaOnline.includes(activeChatName?.id) ? "Online" : "Offline"}
           </div>
           <div className="active-user-info">
             <BsThreeDotsVertical />
           </div>
         </div>
         <div className="message">
-          {activeChatName.status === "single"
+          {activeChatName?.status === "single"
             ? allMsg.map((item) => (
                 <div ref={scrollMsg}>
                   {item.whosendid === user.uid ? (
@@ -342,12 +344,12 @@ export const Chatting = () => {
                   )}
                 </div>
               ))
-            : user.uid === activeChatName.adminid ||
-              groupMembers.includes(activeChatName.id + user.uid)
+            : user.uid === activeChatName?.adminid ||
+              groupMembers.includes(activeChatName?.id + user.uid)
             ? groupMsg.map((item) => (
                 <div>
                   {item.whosendid === user.uid
-                    ? item.whoreciveid === activeChatName.id && (
+                    ? item.whoreciveid === activeChatName?.id && (
                         <div className="right-message">
                           <div className="right-text">
                             <h6>{item.msg}</h6>
@@ -355,7 +357,7 @@ export const Chatting = () => {
                           <p>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                         </div>
                       )
-                    : item.whoreciveid === activeChatName.id && (
+                    : item.whoreciveid === activeChatName?.id && (
                         <div className="left-message">
                           <div className="left-text">
                             <h6>{item.msg}</h6>
@@ -378,89 +380,176 @@ export const Chatting = () => {
             />
           </div>
         )}
+        {activeChatName?.status === "single" ? (
+          <div className="div">
+            {!showAudio & !audioUrl && (
+              <div className="write-box">
+                <div className="inputs-box">
+                  <Emoji
+                    handleEmojiSelect={handleEmojiSelect}
+                    setOpenEmoji={setOpenEmoji}
+                    openEmoji={openEmoji}
+                  />
 
-        <div className="div">
-          {!showAudio & !audioUrl && (
-            <div className="write-box">
-              <div className="inputs-box">
-                <Emoji
-                  handleEmojiSelect={handleEmojiSelect}
-                  setOpenEmoji={setOpenEmoji}
-                  openEmoji={openEmoji}
-                />
+                  <input
+                    onKeyUp={handleMsgSendInterBtn}
+                    onChange={(e) => setMsg(e.target.value)}
+                    type="text"
+                    value={msg}
+                  />
+                  <SpeedDial
+                    ariaLabel="SpeedDial basic example"
+                    sx={{ position: "absolute", bottom: 2, right: -5 }}
+                    icon={<SpeedDialIcon />}
+                  >
+                    {actions.map((action) => (
+                      <SpeedDialAction
+                        key={action.name}
+                        onClick={() => showMorefundamantal(action.name)}
+                        icon={action.icon}
+                        tooltipTitle={action.name}
+                      />
+                    ))}
+                  </SpeedDial>
 
-                <input
-                  onKeyUp={handleMsgSendInterBtn}
-                  onChange={(e) => setMsg(e.target.value)}
-                  type="text"
-                  value={msg}
-                />
-                <SpeedDial
-                  ariaLabel="SpeedDial basic example"
-                  sx={{ position: "absolute", bottom: 2, right: -5 }}
-                  icon={<SpeedDialIcon />}
+                  <input
+                    hidden
+                    onChange={handleImgSend}
+                    type="file"
+                    ref={chooseFile}
+                  />
+                </div>
+                <Button
+                  onClick={handleSendMessage}
+                  className="send-button"
+                  variant="contained"
                 >
-                  {actions.map((action) => (
-                    <SpeedDialAction
-                      key={action.name}
-                      onClick={() => showMorefundamantal(action.name)}
-                      icon={action.icon}
-                      tooltipTitle={action.name}
-                    />
-                  ))}
-                </SpeedDial>
-
-                <input
-                  hidden
-                  onChange={handleImgSend}
-                  type="file"
-                  ref={chooseFile}
-                />
+                  <FaTelegramPlane />
+                </Button>
               </div>
-              <Button
-                onClick={handleSendMessage}
-                className="send-button"
-                variant="contained"
-              >
-                <FaTelegramPlane />
-              </Button>
+            )}
+            <div
+              className="audio-record"
+              onClick={() => setShowAudio(!showAudio)}
+            >
+              <AudioRecorder
+                onRecordingComplete={addAudioElement}
+                audioTrackConstraints={{
+                  noiseSuppression: true,
+                  echoCancellation: true,
+                }}
+                downloadOnSavePress={true}
+                downloadFileExtension="mp3"
+              />
             </div>
-          )}
-          <div
-            className="audio-record"
-            onClick={() => setShowAudio(!showAudio)}
-          >
-            <AudioRecorder
-              onRecordingComplete={addAudioElement}
-              audioTrackConstraints={{
-                noiseSuppression: true,
-                echoCancellation: true,
-              }}
-              downloadOnSavePress={true}
-              downloadFileExtension="mp3"
-            />
+            {audioUrl && (
+              <div className="audio-sound">
+                <audio controls src={audioUrl}></audio>
+
+                <div
+                  onClick={handleSendVoiceRecord}
+                  className="voice-button"
+                  variant="contained"
+                >
+                  <SendIcon />
+                </div>
+                <div
+                  onClick={() => setAudioUrl("")}
+                  className="voice-button"
+                  variant="contained"
+                >
+                  <DeleteIcon />
+                </div>
+              </div>
+            )}
           </div>
-          {audioUrl && (
-            <div className="audio-sound">
-              <audio controls src={audioUrl}></audio>
+        ) : user.uid === activeChatName?.adminid ||
+          groupMembers.includes(activeChatName?.id + user.uid) ? (
+          <div className="div">
+            {!showAudio & !audioUrl && (
+              <div className="write-box">
+                <div className="inputs-box">
+                  <Emoji
+                    handleEmojiSelect={handleEmojiSelect}
+                    setOpenEmoji={setOpenEmoji}
+                    openEmoji={openEmoji}
+                  />
 
-              <div
-                onClick={handleSendVoiceRecord}
-                className="voice-button"
-                variant="contained"
-              >
-                <SendIcon />
+                  <input
+                    onKeyUp={handleMsgSendInterBtn}
+                    onChange={(e) => setGrpInput(e.target.value)}
+                    type="text"
+                    value={grpInput}
+                  />
+                  <SpeedDial
+                    ariaLabel="SpeedDial basic example"
+                    sx={{ position: "absolute", bottom: 2, right: -5 }}
+                    icon={<SpeedDialIcon />}
+                  >
+                    {actions.map((action) => (
+                      <SpeedDialAction
+                        key={action.name}
+                        onClick={() => showMorefundamantal(action.name)}
+                        icon={action.icon}
+                        tooltipTitle={action.name}
+                      />
+                    ))}
+                  </SpeedDial>
+
+                  <input
+                    hidden
+                    onChange={handleImgSend}
+                    type="file"
+                    ref={chooseFile}
+                  />
+                </div>
+                <Button
+                  onClick={handleSendMessage}
+                  className="send-button"
+                  variant="contained"
+                >
+                  <FaTelegramPlane />
+                </Button>
               </div>
-              <div
-                onClick={() => setAudioUrl("")}
-                className="voice-button"
-                variant="contained"
-              >
-                <DeleteIcon />
-              </div>
+            )}
+            <div
+              className="audio-record"
+              onClick={() => setShowAudio(!showAudio)}
+            >
+              <AudioRecorder
+                onRecordingComplete={addAudioElement}
+                audioTrackConstraints={{
+                  noiseSuppression: true,
+                  echoCancellation: true,
+                }}
+                downloadOnSavePress={true}
+                downloadFileExtension="mp3"
+              />
             </div>
-          )}
-        </div>
+            {audioUrl && (
+              <div className="audio-sound">
+                <audio controls src={audioUrl}></audio>
+
+                <div
+                  onClick={handleSendVoiceRecord}
+                  className="voice-button"
+                  variant="contained"
+                >
+                  <SendIcon />
+                </div>
+                <div
+                  onClick={() => setAudioUrl("")}
+                  className="voice-button"
+                  variant="contained"
+                >
+                  <DeleteIcon />
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          "nai"
+        )}
       </div>
     </>
   );
