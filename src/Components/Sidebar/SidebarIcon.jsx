@@ -19,7 +19,9 @@ export const SidebarIcon = () => {
         </NavLink>
       </div>
       <div className="icon">
-        <IoMdNotificationsOutline />
+        <NavLink className="icon" to="/notification">
+          <IoMdNotificationsOutline />
+        </NavLink>
       </div>
       <div className="icon">
         <RxGear />

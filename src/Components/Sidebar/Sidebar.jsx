@@ -14,17 +14,22 @@ export const Sidebar = () => {
   const db = getDatabase();
   const auth = getAuth();
   const [open, setOpen] = React.useState(false);
+  const user = useSelector((user) => user.logIn.login);
+  const activeChatName = useSelector((user) => user.active.active);
 
-  // const [active,setactive]=useState([])
+  // const [active, setactive] = useState([]);
   // useEffect(() => {
   //   onValue(ref(db, "Online"), (snapshot) => {
   //     let OnlineArr = [];
   //     snapshot.forEach((item) => {
   //       OnlineArr.push(item.val());
   //     });
-  //     setShowOnline(OnlineArr);
+  //     setactive(OnlineArr);
   //   });
   // }, []);
+  // console.log("active", active);
+  console.log("user", user);
+  console.log("activeChatName", activeChatName);
 
   const handleLogOut = () => {
     signOut(auth)

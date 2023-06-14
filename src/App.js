@@ -12,6 +12,7 @@ import { Registration } from "./Pages/Registration";
 import LoggedIn from "./PrivateRouter/LoggedIn";
 import NotLoggedIn from "./PrivateRouter/NotLoggedIn";
 import { Message } from "./Pages/Message";
+import { Notification } from "./Components/Notifications";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,6 +22,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<Home />}></Route>
             <Route path="/message" element={<Message />}></Route>
+            <Route path="/notification" element={<Notification />}></Route>
           </Route>
         </Route>
         <Route element={<NotLoggedIn />}>
