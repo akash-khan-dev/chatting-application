@@ -77,6 +77,8 @@ export const Chatting = () => {
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
         }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
+      }).then(() => {
+        setMsg("");
       });
     } else {
       set(push(ref(db, "groupMsg")), {
@@ -89,6 +91,8 @@ export const Chatting = () => {
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
         }- ${new Date().getDate()} ${new Date().getHours()}: ${new Date().getMinutes()}`,
+      }).then(() => {
+        setMsg("");
       });
     }
   };

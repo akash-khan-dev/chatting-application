@@ -7,7 +7,7 @@ import { LoginUser } from "../../Feature/UserSlice/UserSlice";
 import { getAuth, signOut } from "firebase/auth";
 import { AiOutlineCloudDownload } from "react-icons/ai";
 import { PopUp } from "../Modal/PopUp";
-import { getDatabase, onValue, ref, remove } from "firebase/database";
+import { getDatabase, onValue, push, ref, remove } from "firebase/database";
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,10 @@ export const Sidebar = () => {
   //     setactive(OnlineArr);
   //   });
   // }, []);
-  // console.log("active", active);
+  // console.log(
+  //   "active",
+  //   active.map((item) => item.userid)
+  // );
   console.log("user", user);
   console.log("activeChatName", activeChatName);
 
@@ -38,7 +41,7 @@ export const Sidebar = () => {
         dispatch(LoginUser(null));
       })
       .then(() => {
-        remove(ref(db, "Online/"));
+        remove(push(ref(db, "Online/")));
       });
   };
   const users = useSelector((user) => user.logIn.login);
