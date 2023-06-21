@@ -24,7 +24,9 @@ export const SidebarIcon = () => {
         </NavLink>
       </div>
       <div className="icon">
-        <RxGear />
+        <NavLink className="icon" to="/account">
+          <RxGear />
+        </NavLink>
       </div>
     </div>
   );
