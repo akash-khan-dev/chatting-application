@@ -2,9 +2,22 @@ import React from "react";
 import "./style.css";
 import { useSelector } from "react-redux";
 import { Button, TextField } from "@mui/material";
+import { useFormik } from "formik";
 
 const AccountInfo = () => {
   const user = useSelector((user) => user.logIn.login);
+  const initialValues = {
+    fullname: user.displayName,
+    email: user.email,
+    password: "",
+  };
+  const formik = useFormik({
+    initialValues: initialValues,
+
+    onsubmit: () => {
+      console.log("hello");
+    },
+  });
 
   return (
     <>
@@ -16,9 +29,10 @@ const AccountInfo = () => {
             </picture>
           </div>
           <div className="account-info">
-            <form action="">
+            <form onSubmit={formik.handleSubmit}>
               <TextField
                 type="text"
+                onChange={formik.handleChange}
                 fullWidth
                 className="account-input"
                 margin="normal"
@@ -26,6 +40,7 @@ const AccountInfo = () => {
                 label="Full Name"
                 variant="outlined"
                 name="fullname"
+                value={formik.values.fullname}
               />
               <TextField
                 type="text"
@@ -35,17 +50,21 @@ const AccountInfo = () => {
                 id="outlined-basic"
                 label="Email"
                 variant="outlined"
-                name="fullname"
+                name="email"
+                value={formik.values.email}
+                disabled
               />
               <TextField
                 type="text"
+                onChange={formik.handleChange}
                 fullWidth
                 className="account-input"
                 margin="normal"
                 id="outlined-basic"
-                label="Password"
+                label="New Password"
                 variant="outlined"
-                name="fullname"
+                name="password"
+                value={formik.values.password}
               />
               <Button type="submit" className="account-btn" variant="contained">
                 update account
