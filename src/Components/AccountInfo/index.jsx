@@ -8,12 +8,13 @@ import { getDatabase, ref, update } from "firebase/database";
 import { LoginUser } from "../../Feature/UserSlice/UserSlice";
 import { AiFillEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
+import { BeatLoader } from "react-spinners";
 
 const AccountInfo = () => {
   const auth = getAuth();
   const db = getDatabase();
-
   const [isShowPass, setIsShowPass] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const userPassword = auth.currentUser;
   const user = useSelector((user) => user.logIn.login);
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const AccountInfo = () => {
     },
   });
   const handleUpdateProfile = () => {
+    setIsLoading(true);
     updateProfile(auth.currentUser, {
       displayName: formik.values.fullname,
     }).then(async () => {
@@ -42,6 +44,7 @@ const AccountInfo = () => {
         "users",
         JSON.stringify({ ...user, displayName: formik.values.fullname })
       );
+      setIsLoading(false);
     });
   };
 
@@ -112,9 +115,23 @@ const AccountInfo = () => {
                   {isShowPass ? <AiOutlineEyeInvisible /> : <AiFillEye />}
                 </div>
               </div>
-              <Button type="submit" className="account-btn" variant="contained">
-                update account
-              </Button>
+              {isLoading ? (
+                <Button
+                  type="submit"
+                  className="account-btn"
+                  variant="contained"
+                >
+                  <BeatLoader />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="account-btn"
+                  variant="contained"
+                >
+                  update account
+                </Button>
+              )}
             </form>
           </div>
         </div>
