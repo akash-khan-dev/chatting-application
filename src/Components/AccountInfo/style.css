@@ -32,6 +32,9 @@
 .account-info input {
   width: 300px !important;
 }
+.password-field {
+  position: relative;
+}
 .account-btn {
   width: 70% !important;
   margin-top: 15px !important;

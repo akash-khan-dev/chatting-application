@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, TextField } from "@mui/material";
 import { useFormik } from "formik";
-import { getAuth, updateProfile } from "firebase/auth";
+import { getAuth, updateProfile, updatePassword } from "firebase/auth";
 import { getDatabase, ref, update } from "firebase/database";
 import { LoginUser } from "../../Feature/UserSlice/UserSlice";
+import { AiFillEye } from "react-icons/ai";
+import { AiOutlineEyeInvisible } from "react-icons/ai";
 
 const AccountInfo = () => {
   const auth = getAuth();
   const db = getDatabase();
+
+  const [isShowPass, setIsShowPass] = useState(false);
+  const userPassword = auth.currentUser;
   const user = useSelector((user) => user.logIn.login);
   const dispatch = useDispatch();
   const initialValues = {
@@ -31,6 +36,7 @@ const AccountInfo = () => {
       await update(ref(db, "users/" + user.uid), {
         username: formik.values.fullname,
       });
+      updatePassword(userPassword, formik.values.password);
       dispatch(LoginUser({ ...user, displayName: formik.values.fullname }));
       localStorage.setItem(
         "users",
@@ -80,18 +86,32 @@ const AccountInfo = () => {
                 value={formik.values.email}
                 disabled
               />
-              <TextField
-                type="text"
-                onChange={formik.handleChange}
-                fullWidth
-                className="account-input"
-                margin="normal"
-                id="outlined-basic"
-                label="New Password"
-                variant="outlined"
-                name="password"
-                value={formik.values.password}
-              />
+              <div className="password-field">
+                <TextField
+                  type={isShowPass ? "text" : "password"}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  className="account-input"
+                  margin="normal"
+                  id="outlined-basic"
+                  label="New Password"
+                  variant="outlined"
+                  name="password"
+                  value={formik.values.password}
+                />
+                <div
+                  onClick={() => setIsShowPass(!isShowPass ? true : false)}
+                  className="showpass"
+                  style={{
+                    position: "absolute",
+                    top: "44%",
+                    right: "8%",
+                    cursor: "pointer",
+                  }}
+                >
+                  {isShowPass ? <AiOutlineEyeInvisible /> : <AiFillEye />}
+                </div>
+              </div>
               <Button type="submit" className="account-btn" variant="contained">
                 update account
               </Button>
