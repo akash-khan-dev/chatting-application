@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { getAuth, updateProfile } from "firebase/auth";
-import { getDatabase, ref, set, update } from "firebase/database";
+import { getDatabase, ref, update } from "firebase/database";
 import { LoginUser } from "../../Feature/UserSlice/UserSlice";
 
 const AccountInfo = () => {
@@ -24,15 +24,12 @@ const AccountInfo = () => {
       handleUpdateProfile();
     },
   });
-  const handleUpdateProfile = async () => {
-    await updateProfile(auth.currentUser, {
+  const handleUpdateProfile = () => {
+    updateProfile(auth.currentUser, {
       displayName: formik.values.fullname,
     }).then(async () => {
-      const userInfo = {
-        displayName: auth.currentUser.displayName,
-      };
       await update(ref(db, "users/" + user.uid), {
-        username: userInfo.displayName,
+        username: formik.values.fullname,
       });
       dispatch(LoginUser({ ...user, displayName: formik.values.fullname }));
       localStorage.setItem(
@@ -41,6 +38,7 @@ const AccountInfo = () => {
       );
     });
   };
+
   return (
     <>
       <div className="account-page">
